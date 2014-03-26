@@ -71,12 +71,12 @@ var play_state = {
             this.gun.rotation = game.physics.arcade.angleToPointer(this.gun) + 89.5;
 
             var self = this;
-            app.enemies.forEach(function(enemy) {
+
+            // update position of all enemies
+            // app.enemies.forEach(function(enemy) {
                 // game.physics.arcade.accelerateToObject(enemy, self.base, 50, 250, 250);
-                game.physics.arcade.moveToObject(enemy, self.base)
-
-            }, game.physics);
-
+                // game.physics.arcade.moveToObject(enemy, self.base)
+            // }, game.physics);
         }
     },
 
@@ -88,7 +88,9 @@ var play_state = {
             var bullet = this.bullets.getFirstDead();
             // bullet.reset(this.gun.x - 2, this.gun.y - 4);
             bullet.reset(this.base.x + 4, this.base.y + 5);
+            // face outwards
             bullet.rotation = game.physics.arcade.angleToPointer(bullet) + 89.5;
+            // move outwards
             game.physics.arcade.moveToPointer(bullet, 300);
         }
     },
@@ -116,16 +118,18 @@ var play_state = {
         } else { // a bullet has hit an enemy
             object.kill();
             enemy.kill();
+            // increment the score
             this.label_score.setText(++app.score);
+            // reduce the alive count of baddies
             app.enemies_count--;
 
             // increment dificulity
             app.spawn_amount = app.spawn_amount + app.increment_spawn;
+
             // app.delay = app.delay - app.increment_time;
         }
     },
 
-    // Restart the game
     restart_game: function() {
         // Remove the timer
         this.game.time.events.remove(this.timer);
@@ -156,14 +160,16 @@ var play_state = {
         {
             // choose a random side
             sides['direction' + Math.floor(Math.random() * 4)]();
-
+            // rotate in the middle
             enemy.anchor.setTo(0.5, 0.5);
+            // face the base (center)
             enemy.rotation = game.physics.arcade.angleBetween(enemy, this.base) - 89.5;
             // e.body.velocity = Math.random() * 10;
             // enemy.body.angularVelocity = Math.floor(Math.random() * 100);
             enemy.body.mass = Math.random();
             // enemy.scale.x = app.scale;
             // enemy.scale.y = app.scale;
+            game.physics.arcade.moveToObject(enemy, this.base, 100);
             app.enemies_count++;
         }
 
