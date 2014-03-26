@@ -10,6 +10,9 @@ var play_state = {
         app.score = 0;
         app.alive = true;
 
+        app.fireRate = 200;
+        app.nextFire = 0;
+
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.tileSprite(0, 0, 800, 600, 'background');
 
@@ -20,7 +23,9 @@ var play_state = {
         this.base = game.add.sprite(x, y, 'gun_base');
         this.gun = game.add.sprite(x+11, y+12, 'gun');
         this.gun.enableBody = true;
-        this.gun.anchor.setTo(.5, .7);
+        this.gun.anchor.setTo(0.5, 0.7);
+
+        this.create_bullet();
 
         var self = this;
         this.game.input.onDown.add(function(e){
@@ -34,9 +39,9 @@ var play_state = {
         this.enemies.enableBody = true;
         // make 20
         // this.enemies.createMultiple(20, 'bug-1-1');
-        this.spawn_random(10);
+        this.spawn_random(4);
 
-        this.timer = this.game.time.events.loop(Phaser.Timer.SECOND * 1.5, this.spawn_random, this);
+        this.timer = this.game.time.events.loop(Phaser.Timer.SECOND * 1.8, this.spawn_random, this);
 
 
         // Add a score label on the top left of the screen
@@ -46,7 +51,7 @@ var play_state = {
 
     // This function is called 60 times per second
     update: function() {
-        // this.game.physics.arcade.collide(this.gun, this.enemies, this.dead, null, this);
+        this.game.physics.arcade.collide(this.bullets, this.enemies, this.enemy_killed, null, this);
 
         if(app.alive) {
 
@@ -65,8 +70,36 @@ var play_state = {
     },
 
     fire: function() {
+        // console.log('fire!');
+        if (game.time.now > app.nextFire && this.bullets.countDead() > 0)
+        {
+            app.nextFire = game.time.now + app.fireRate;
+
+            var bullet = this.bullets.getFirstDead();
+
+            bullet.reset(this.gun.x - 8, this.gun.y - 8);
+
+            game.physics.arcade.moveToPointer(bullet, 300);
+        }
+    },
+
+    create_bullet: function() {
+        this.bullets = game.add.group();
+        this.bullets.enableBody = true;
+        this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        this.bullets.createMultiple(50, 'bullet-1');
 
 
+        this.bullets.setAll('exists', false);
+        this.bullets.setAll('visible', false);
+        this.bullets.setAll('checkWorldBounds', true);
+        this.bullets.setAll('outOfBoundsKill', true);
+    },
+
+    enemy_killed: function(bullet, enemy) {
+        // console.log(e);
+        bullet.kill();
+        enemy.kill();
     },
 
     dead: function() {
@@ -83,7 +116,7 @@ var play_state = {
     },
 
     spawn_random: function(amount) {
-        console.log('making some bad guys');
+        // console.log('making some bad guys');
         var side = (amount || 4) / 4;
         ran = function(e) {
 
