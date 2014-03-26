@@ -19,6 +19,8 @@ var play_state = {
             increment_spawn: 0.05,
             bullets: 'bullet-1',
             enemy_types: ['bug1'],
+            enemy_current: 0,
+            enemy_speed: 60,
             enemies_alive: [],
             enemies_count: 0
         };
@@ -31,6 +33,7 @@ var play_state = {
         // Display the gun on the screen
         this.base = game.add.sprite(x-10, y, 'gun_base');
         this.base.enableBody = true;
+        this.base.anchor.setTo(0.5, 0.5);
         // this.base.width = 100;
         // this.base.physicsBodyType = Phaser.Physics.ARCADE;
 
@@ -62,10 +65,10 @@ var play_state = {
 
     // This function is called 60 times per second
     update: function() {
+        // watch for hits
         this.game.physics.arcade.overlap(app.enemies, [this.bullets, this.base], this.enemy_hit, null, this);
 
         if(app.alive) {
-
             //  This will update the sprite.rotation so that it points to the currently active pointer
             //  On a Desktop that is the mouse, on mobile the most recent finger press.
             this.gun.rotation = game.physics.arcade.angleToPointer(this.gun) + 89.5;
@@ -144,16 +147,16 @@ var play_state = {
         var enemy;
         var sides = {
             direction0: function() {
-                enemy = app.enemies.create(0, game.world.randomY, app.enemy_types[0]);
+                enemy = app.enemies.create(0, game.world.randomY, app.enemy_types[app.enemy_current]);
             },
             direction1: function() {
-                enemy = app.enemies.create(game.world.randomX, 0, app.enemy_types[0]);
+                enemy = app.enemies.create(game.world.randomX, 0, app.enemy_types[app.enemy_current]);
             },
             direction2: function() {
-                enemy = app.enemies.create(game.world.width, game.world.randomY, app.enemy_types[0]);
+                enemy = app.enemies.create(game.world.width, game.world.randomY, app.enemy_types[app.enemy_current]);
             },
             direction3: function() {
-                enemy = app.enemies.create(game.world.randomX, game.world.height, app.enemy_types[0]);
+                enemy = app.enemies.create(game.world.randomX, game.world.height, app.enemy_types[app.enemy_current]);
             },
         }
         for (var i = 0; i < max_spawn; i++)
@@ -169,7 +172,7 @@ var play_state = {
             enemy.body.mass = Math.random();
             // enemy.scale.x = app.scale;
             // enemy.scale.y = app.scale;
-            game.physics.arcade.moveToObject(enemy, this.base, 100);
+            game.physics.arcade.moveToObject(enemy, this.base, app.enemy_speed);
             app.enemies_count++;
         }
 
