@@ -1,6 +1,6 @@
 {
   "name": "gunday",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "dependencies": {
     "requirejs": "^2.1.4",
     "jquery"   : "^2.1.0",
