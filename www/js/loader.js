@@ -66,7 +66,7 @@ require(libsToLoad, function(
             game.stage.backgroundColor = '#333';
             game.load.image('gun', 'img/gun/turret.png');
             game.load.image('gun_base', 'img/gun/base.png');
-            game.load.image('bug-1', 'img/bug-1-1.png');
+            game.load.image('bug1', 'img/bug-1-1.png');
             game.load.image('bullet-1', 'img/bullet-1.png');
             game.load.image('background', 'img/bgtile.png');
             // game.load.audio('jump', 'assets/jump.wav');
