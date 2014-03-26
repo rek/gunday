@@ -88,6 +88,7 @@ var play_state = {
             var bullet = this.bullets.getFirstDead();
             // bullet.reset(this.gun.x - 2, this.gun.y - 4);
             bullet.reset(this.base.x + 4, this.base.y + 5);
+            bullet.rotation = game.physics.arcade.angleToPointer(bullet) + 89.5;
             game.physics.arcade.moveToPointer(bullet, 300);
         }
     },
