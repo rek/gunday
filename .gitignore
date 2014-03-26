@@ -10,4 +10,4 @@ platforms/android/assets/www
 *compiled.js
 platforms/*/ant-*
 platforms/*/*/ant-*
-platforms/android/src
+npm-debug.log
