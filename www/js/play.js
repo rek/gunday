@@ -157,15 +157,16 @@ var play_state = {
             // choose a random side
             sides['direction' + Math.floor(Math.random() * 4)]();
 
+            enemy.anchor.setTo(0.5, 0.5);
             enemy.rotation = game.physics.arcade.angleBetween(enemy, this.base) - 89.5;
             // e.body.velocity = Math.random() * 10;
             // enemy.body.angularVelocity = Math.floor(Math.random() * 100);
             enemy.body.mass = Math.random();
             // enemy.scale.x = app.scale;
             // enemy.scale.y = app.scale;
+            app.enemies_count++;
         }
 
-        app.enemies_count++;
     },
 
     render: function() {
