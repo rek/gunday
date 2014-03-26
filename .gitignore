@@ -1,0 +1,13 @@
+node_modules
+temp
+dist
+build
+.sass-cache
+www/js/bower_components
+platforms/android/assets/www
+.tmp/
+*.sublime-*
+*compiled.js
+platforms/*/ant-*
+platforms/*/*/ant-*
+platforms/android/src
