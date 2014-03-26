@@ -7,101 +7,70 @@ var play_state = {
 
     // Fuction called after 'preload' to setup the game
     create: function() {
-        this.game.physics.startSystem(Phaser.Physics.ARCADE);
-
         app.score = 0;
+        app.alive = true;
+
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+        game.add.tileSprite(0, 0, 800, 600, 'background');
 
         var x = game.world.width/2, y = game.world.height/2;
 
-        // Display the bird on the screen
-        this.bird = this.game.add.sprite(x/2, y/2, 'gun');
-        this.bird = this.game.add.sprite(x/2, y/2, 'gun_base');
-        this.bird.scale.x = 0.5;
-        this.bird.scale.y = 0.5;
 
-        // set rotation.
-        this.bird.anchor.setTo(-0.2, 0.5);
-
-        // add generic gravity
-        this.game.physics.arcade.gravity.y = 300;
-        this.game.physics.enable(this.bird, Phaser.Physics.ARCADE);
-
-        // Add gravity to the bird to make it fall
-        // this.bird.gravity = new Phaser.Point(0, 1200);
-
-        // Call the 'jump' function when the spacekey is hit
-        // var space_key = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        // space_key.onDown.add(this.jump, this);
+        // Display the gun on the screen
+        this.base = game.add.sprite(x, y, 'gun_base');
+        this.gun = game.add.sprite(x+11, y+12, 'gun');
+        this.gun.enableBody = true;
+        this.gun.anchor.setTo(.5, .7);
 
         var self = this;
         this.game.input.onDown.add(function(e){
             // console.log('tapped');
-            self.jump();
+            self.fire();
         }, this);
 
-        // Create a group of 20 pipes
-        this.pipes = game.add.group();
+        // Create a group of enemies
+        this.enemies = game.add.group();
         // get a body, so we can change the gravity
-        this.pipes.enableBody = true;
+        this.enemies.enableBody = true;
         // make 20
-        this.pipes.createMultiple(20, 'pipe');
+        // this.enemies.createMultiple(20, 'bug-1-1');
+        this.spawn_random(10);
 
-        this.pipes.scale.x = 0.6;
-        // this.pipes.scale.y = 0.8;
+        this.timer = this.game.time.events.loop(Phaser.Timer.SECOND * 1.5, this.spawn_random, this);
 
-        //call right up
-        this.add_row_of_pipes();
-
-        // Timer that calls 'add_row_of_pipes' ever 2.8 seconds
-        this.timer = this.game.time.events.loop(Phaser.Timer.SECOND * 2.8, this.add_row_of_pipes, this);
 
         // Add a score label on the top left of the screen
         var style = { font: '30px Arial', fill: '#ffffff' };
-        this.label_score = this.game.add.text(20, 20, '0', style);
+        this.label_score = game.add.text(20, 20, '0', style);
     },
 
     // This function is called 60 times per second
     update: function() {
-        // If the bird is out of the world (too high or too low), call the 'restart_game' function
-        if (this.bird.inWorld == false)
-            this.restart_game();
+        // this.game.physics.arcade.collide(this.gun, this.enemies, this.dead, null, this);
 
-        if (this.bird.angle < 80)
-            this.bird.angle += 1;
+        if(app.alive) {
 
-        // If the bird overlap any pipes, call 'restart_game'
-        this.game.physics.arcade.collide(this.bird, this.pipes, this.hit_pipe, null, this);
+            //  This will update the sprite.rotation so that it points to the currently active pointer
+            //  On a Desktop that is the mouse, on mobile the most recent finger press.
+            this.gun.rotation = game.physics.arcade.angleToPointer(this.gun);
+
+            var self = this;
+            this.enemies.forEach(function(enemy) {
+                // game.physics.arcade.accelerateToObject(enemy, this.gun, 600, 250, 250);
+                game.physics.arcade.moveToObject(enemy, self.gun)
+            }, game.physics);
+
+            // enemies.forEach(game.physics.moveToObject(player), game.physics, false, 30);
+        }
+    },
+
+    fire: function() {
+
 
     },
 
-    // Make the bird jump
-    jump: function() {
-        if (this.bird.alive == false)
-            return;
-
-        // Add a vertical velocity to the bird
-        this.bird.body.velocity.y = -200;
-
-        // create an animation on the bird
-        var animation = this.game.add.tween(this.bird);
-
-        // Set the animation to change the angle of the sprite to -20° in 100 milliseconds
-        animation.to({angle: -20}, 100);
-
-        // And start the animation
-        animation.start();
-    },
-
-    hit_pipe: function() {
-        if (this.bird.alive == false)
-            return;
-
-        this.bird.alive = false;
-        this.game.time.events.remove(this.timer);
-
-        this.pipes.forEachAlive(function(p) {
-            p.body.velocity.x = 0;
-        }, this);
+    dead: function() {
+        app.alive = false;
     },
 
     // Restart the game
@@ -113,63 +82,56 @@ var play_state = {
         this.game.state.start('menu');
     },
 
-    // Add a pipe on the screen
-    add_one_pipe: function(x, y) {
-        // console.log('adding one pipe')
-        // Get the first dead pipe of our group
-        var pipe = this.pipes.getFirstDead();
+    spawn_random: function(amount) {
+        console.log('making some bad guys');
+        var side = (amount || 4) / 4;
+        ran = function(e) {
 
-        // Set the new position of the pipe
-        pipe.reset(x, y);
-        pipe.body.allowGravity = false;
+            // e.body.velocity = Math.random() * 10;
+            // e.body.angularVelocity = Math.random() * 1000;
+            e.body.mass = Math.random();
 
-        // Add velocity to the pipe to make it move left
-        pipe.body.velocity.x -= 150;
-
-//make him bounce
-// pipe.body.collideWorldBounds = true;
-// pipe.body.bounce.y = 0.8;
-
-        pipe.checkWorldBounds = true;
-
-        // Kill the pipe when it's no longer visible
-        pipe.outOfBoundsKill = true;
-    },
-
-    // Add a row of 6 pipes with a hole somewhere in the middle
-    add_row_of_pipes: function() {
-        if (app.score >= 5)
-            return this.next_level();
-
-        var number_of_pipes = 8;
-        app.hole = Math.floor(Math.random() * (number_of_pipes - 2)); //+1; <- bottom holes are hard
-        // thus range is 0 - 6
-        var hole_range = app.hole + 3;
-
-        // console.log('adding pipes group, hole: ' + hole);
-
-        for (var i = 0; i < number_of_pipes; i++) {
-
-            if (i < app.hole || i > hole_range)
-                this.add_one_pipe(600, i*60);
         }
-
-        // make the count increment just as we pass through. eg: after 2.8 seconds
-        game.time.events.add(Phaser.Timer.SECOND * 2.8, function(){
-             this.label_score.setText('' + ++app.score)
-        }, this);
-
+        for (var i = 0; i < side; i++)
+        {
+            var enemy = this.enemies.create(0, game.world.randomY, 'bug-1');
+            ran(enemy);
+        }
+        for (var i = 0; i < side; i++)
+        {
+            var enemy = this.enemies.create(game.world.randomX, 0, 'bug-1');
+            ran(enemy);
+        }
+        for (var i = 0; i < side; i++)
+        {
+            var enemy = this.enemies.create(game.world.width, game.world.randomY, 'bug-1');
+            ran(enemy);
+        }
+        for (var i = 0; i < side; i++)
+        {
+            var enemy = this.enemies.create(game.world.randomX, game.world.height, 'bug-1');
+            ran(enemy);
+        }
     },
 
-    next_level: function() {
-        console.log('level passed');
+    add_one_enemy: function(x, y) {
+        console.log('adding guy');
 
-        // Remove the timer
-        game.time.events.remove(this.timer);
+        // console.log('adding one enemy')
+        // Get the first dead enemy of our group
+        var enemy = this.enemies.getFirstDead();
 
-        game.time.events.add(Phaser.Timer.SECOND * 2.8, function(){
-            this.game.state.start('level2_menu');
-        }, this);
+        // Set the new position of the enemy
+        enemy.reset(x, y);
+        enemy.body.allowGravity = false;
+
+        // Add velocity to the enemy to make it move left
+        enemy.body.velocity.x -= 150;
+
+        enemy.checkWorldBounds = true;
+
+        // Kill the enemy when it's no longer visible
+        enemy.outOfBoundsKill = true;
     },
 
     render: function() {

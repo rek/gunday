@@ -64,9 +64,11 @@ require(libsToLoad, function(
     var load_state = {
         preload: function() {
             game.stage.backgroundColor = '#333';
-            game.load.image('gun', 'img/gun.png');
-            game.load.image('enemy', 'img/enemy.png');
-            game.load.image('bullet1', 'img/bullet1.png');
+            game.load.image('gun', 'img/gun/turret.png');
+            game.load.image('gun_base', 'img/gun/base.png');
+            game.load.image('bug-1', 'img/bug-1-1.png');
+            game.load.image('bullet', 'img/bullet-1.png');
+            game.load.image('background', 'img/bgtile.png');
             // game.load.audio('jump', 'assets/jump.wav');
         },
         create: function() {
