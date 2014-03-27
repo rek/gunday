@@ -14,7 +14,7 @@ var play_state = {
             spawn_amount: 1,
             scale: 2,
             fireRate: 200,
-            nextFire: 0,
+            nextFire: 10,
             fireDisable: false, // if over an upgrade etc
             increment_time: 0.005,
             increment_spawn: 0.05,
@@ -86,9 +86,8 @@ var play_state = {
         }
     },
 
-    fire: function(e) {
-        // console.log('fire!');
-        // console.log(e);
+    fire: function() {
+        console.log('Next fire: ' + app.nextFire );
         if (app.alive && !app.fireDisable && game.time.now > app.nextFire && this.bullets.countDead() > 0)
         {
             app.nextFire = game.time.now + app.fireRate;
@@ -186,7 +185,11 @@ var play_state = {
         var upgrade = app.upgrades_active[sprite.key];
         // do upgrade
         app.upgrade_position = app.upgrade_position - upgrade.size;
-        app.fireRate = app.fireRate - upgrade.fire_rate;
+
+        var new_amount = app[upgrade.type] + upgrade.amount;
+        // console.log('Changing ' + upgrade.type + ' from: ' + app[upgrade.type] + ' -> ' + new_amount);
+        // make sure it stays above 0
+        app[upgrade.type] = new_amount > 0 ? app[upgrade.type] + upgrade.amount : 0;
 
         // remove upgrade button
         sprite.kill();
