@@ -32,16 +32,19 @@ var play_state = {
         game.add.tileSprite(0, 0, 800, 600, 'background');
 
         // Display the gun on the screen
-        this.base = game.add.sprite(game.world.centerX-10, game.world.centerY, 'gun_base');
+
+        this.base = game.add.sprite(game.world.centerX-11, game.world.centerY, 'gun_base');
+
         this.base.enableBody = true;
         this.base.anchor.setTo(0.5, 0.5);
         // this.base.width = 100;
         // this.base.physicsBodyType = Phaser.Physics.ARCADE;
 
         game.physics.enable(this.base, Phaser.Physics.ARCADE);
-        this.gun = game.add.sprite(game.world.centerX+1, game.world.centerY+12, 'gun');
+        this.gun = game.add.sprite(game.world.centerX+.5, game.world.centerY+11, 'gun');
+
         this.gun.enableBody = true;
-        this.gun.anchor.setTo(0.5, 0.7); // set a good rotation point
+        this.gun.anchor.setTo(0.5, 0.68); // set a good rotation point
 
         // setup the bullets
         this.create_bullets();
