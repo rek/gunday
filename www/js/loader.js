@@ -73,6 +73,7 @@ require(libsToLoad, function(
             game.load.image('background', 'img/bgtile.png');
 
             game.load.image('upgrade1', 'img/gun/base.png');
+            game.load.image('upgrade2', 'img/gun/base.png');
 
 
             // game.load.audio('jump', 'assets/jump.wav');

@@ -15,6 +15,7 @@ var play_state = {
             scale: 2,
             fireRate: 200,
             nextFire: 0,
+            fireDisable: false, // if over an upgrade etc
             increment_time: 0.005,
             increment_spawn: 0.05,
             bullets: 'bullet-1',
@@ -23,14 +24,15 @@ var play_state = {
             enemy_speed: 60,
             enemies_alive: [],
             enemies_count: 0,
+            upgrade_position: 30, // where to show the next upgrade
             upgrades_available: [],
-            upgrades_active: {}
+            upgrades_active: {},
         };
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.tileSprite(0, 0, 800, 600, 'background');
 
-        var x = game.world.width/2, y = game.world.height/2;
+        var x = game.world.centerX, y = game.world.centerY;
 
         // Display the gun on the screen
         this.base = game.add.sprite(x-10, y, 'gun_base');
@@ -49,7 +51,7 @@ var play_state = {
         var self = this;
         this.game.input.onDown.add(function(e){
             // console.log('tapped');
-            self.fire();
+            self.fire(e);
         }, this);
 
         // Create a group of enemies
@@ -84,9 +86,10 @@ var play_state = {
         }
     },
 
-    fire: function() {
+    fire: function(e) {
         // console.log('fire!');
-        if (app.alive && game.time.now > app.nextFire && this.bullets.countDead() > 0)
+        // console.log(e);
+        if (app.alive && !app.fireDisable && game.time.now > app.nextFire && this.bullets.countDead() > 0)
         {
             app.nextFire = game.time.now + app.fireRate;
             var bullet = this.bullets.getFirstDead();
@@ -142,8 +145,6 @@ var play_state = {
             return u.price <= app.score;
         });
 
-        // set the first position
-        var topUpgrade = 10;
         var self = this;
 
         // show all the upgrades we are allows
@@ -153,15 +154,22 @@ var play_state = {
                 console.log('Displaying upgrade: ' + k);
 
                 // create an upgrade
-                var upgrade_sprite = game.add.sprite(game.world.width-60, topUpgrade, upgrade_definition.sprite);
+                var upgrade_sprite = game.add.sprite(game.world.width-60, app.upgrade_position, upgrade_definition.sprite);
                 upgrade_sprite.inputEnabled = true;
                 upgrade_sprite.input.useHandCursor = true; //if you want a hand cursor
                 upgrade_sprite.events.onInputDown.add(function(clicked_sprite) {
                     self.purchase_upgrade(clicked_sprite);
                 }, this);
 
+                upgrade_sprite.events.onInputOver.add(function() {
+                    app.fireDisable = true;
+                });
+                upgrade_sprite.events.onInputOut.add(function() {
+                    app.fireDisable = false;
+                });
+
                 // display the next one at an incremented location
-                topUpgrade = topUpgrade + upgrade_definition.size;
+                app.upgrade_position = app.upgrade_position + upgrade_definition.size;
 
                 // save it
                 app.upgrades_active[upgrade_definition.sprite] = upgrade_definition;
@@ -176,12 +184,19 @@ var play_state = {
         console.log('Purchasing upgrade: ' + sprite.key);
 
         var upgrade = app.upgrades_active[sprite.key];
+        // do upgrade
+        app.upgrade_position = app.upgrade_position - upgrade.size;
+        app.fireRate = app.fireRate + upgrade.fire_rate;
 
+        // remove upgrade button
         sprite.kill();
 
         // update the score
         app.score = app.score - upgrade.price;
         this.label_score.setText(app.score);
+
+        // re-enable fire
+        app.fireDisable = false;
 
         // remove it from the list of upgrades
         delete app.upgrades_active[sprite.key];
