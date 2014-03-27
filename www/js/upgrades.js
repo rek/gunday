@@ -20,3 +20,72 @@ Upgrades.prototype.getAll = function() {
         }
     };
 }
+
+Upgrades.prototype.checkUpgrades = function() {
+    // check what upgrades are in our pay grade
+    app.upgrades_available = _.filter(app.upgrades.getAll(), function(u) {
+        return u.price <= app.score;
+    });
+
+    var self = this;
+
+    // show all the upgrades we are allows
+    _(app.upgrades_available).forEach(function(upgrade_definition, k) {
+        // add the upgrade if it is not being displayed already
+        if(undefined === app.upgrades_active[upgrade_definition.sprite]) {
+            console.log('Displaying upgrade: ' + upgrade_definition.sprite);
+
+            // create an upgrade
+            var upgrade_sprite = game.add.sprite(game.world.width-60, app.upgrade_position, upgrade_definition.sprite);
+            upgrade_sprite.inputEnabled = true;
+            upgrade_sprite.input.useHandCursor = true; //if you want a hand cursor
+            upgrade_sprite.events.onInputDown.add(function(clicked_sprite) {
+                self.purchaseUpgrades(clicked_sprite);
+            }, this);
+
+            upgrade_sprite.events.onInputOver.add(function() {
+                app.fireDisable = true;
+            });
+            upgrade_sprite.events.onInputOut.add(function() {
+                app.fireDisable = false;
+            });
+
+            // display the next one at an incremented location
+            app.upgrade_position = app.upgrade_position + upgrade_definition.size;
+
+            // save it
+            app.upgrades_active[upgrade_definition.sprite] = upgrade_definition;
+
+        }
+
+    });
+}
+
+Upgrades.prototype.removeUpgrades = function() {
+}
+
+Upgrades.prototype.purchaseUpgrades = function(sprite) {
+    console.log('Purchasing upgrade: ' + sprite.key);
+
+    var upgrade = app.upgrades_active[sprite.key];
+    // do upgrade
+    app.upgrade_position = app.upgrade_position - upgrade.size;
+
+    var new_amount = app[upgrade.type] + upgrade.amount;
+    // console.log('Changing ' + upgrade.type + ' from: ' + app[upgrade.type] + ' -> ' + new_amount);
+    // make sure it stays above 0
+    app[upgrade.type] = new_amount > 0 ? app[upgrade.type] + upgrade.amount : 0;
+
+    // remove upgrade button
+    sprite.kill();
+
+    // update the score
+    app.score = app.score - upgrade.price;
+    app.score_label.setText(app.score);
+
+    // re-enable fire
+    app.fireDisable = false;
+
+    // remove it from the list of upgrades
+    delete app.upgrades_active[sprite.key];
+}
