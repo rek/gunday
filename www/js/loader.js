@@ -4,6 +4,8 @@ var libsToLoad = [
     'jquery',
     'menu',
     'play',
+    'upgrades',
+    'lodash',
     'phaser'
 ];
 
@@ -69,6 +71,10 @@ require(libsToLoad, function(
             game.load.image('bug1', 'img/bug-1-1.png');
             game.load.image('bullet-1', 'img/bullet-1.png');
             game.load.image('background', 'img/bgtile.png');
+
+            game.load.image('upgrade1', 'img/gun/base.png');
+
+
             // game.load.audio('jump', 'assets/jump.wav');
         },
         create: function() {
