@@ -186,7 +186,7 @@ var play_state = {
         var upgrade = app.upgrades_active[sprite.key];
         // do upgrade
         app.upgrade_position = app.upgrade_position - upgrade.size;
-        app.fireRate = app.fireRate + upgrade.fire_rate;
+        app.fireRate = app.fireRate - upgrade.fire_rate;
 
         // remove upgrade button
         sprite.kill();
