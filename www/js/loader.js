@@ -6,6 +6,7 @@ var libsToLoad = [
     'menu',
     'play',
     'upgrades',
+    'upgrades/simpleUpgrades',
     'phaser'
 ];
 

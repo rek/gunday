@@ -1,35 +1,18 @@
-Upgrades = function (app, game) {
-  // boom yeh!
+Upgrades = function () {
+    // boom yeh!
 }
 
-Upgrades.prototype.all = [
-    {
-        sprite: 'upgrade1', // the sprite name
-        price: 2, // the cost of this upgrade
-        size: 30, // the height of the sprite
-        type: 'fireRate', // the key to change
-        amount: -10, // the amount to change the type field
-        action: function(app){
-            // upgrade if its ok to do so.
-            var new_amount = app.fireRate - 100;
-            app.fireRate = new_amount > app.fireLimit ? new_amount : app.fireLimit;
-            // console.log('Changing ' + upgrade.type + ' from: ' + app[upgrade.type] + ' -> ' + new_amount);
+Upgrades.prototype.all = [];
 
-            // var new_amount = app[upgrade.type] + upgrade.amount;
-            // app[upgrade.type] = new_amount > app.fireLimit ? app[upgrade.type] + upgrade.amount : app.fireLimit;
-        }
-    },
-    {
-        sprite: 'upgrade2',
-        price: 4,
-        size: 30,
-        type: 'fireRate',
-        amount: -20,
-        action: function(app){
-            app.fireAmount++;
-        }
-    }
-];
+Upgrades.prototype.load = function(upgrade) {
+    var self = this;
+    require(['upgrades/simpleUpgrades'], function() {
+        console.log('Loading ' + simpleUpgrades.length + ' upgrades.');
+        self.all = _.union(self.all, simpleUpgrades);
+    });
+
+    return this;
+};
 
 /*
 * Add all the upgrades we can afford
@@ -39,8 +22,6 @@ Upgrades.prototype.addUpgrades = function() {
     app.upgrades_available = _.filter(this.all, function(u) {
         return u.price <= app.score;
     });
-
-    var self = this;
 
     // show all the upgrades we are allows
     _(app.upgrades_available).forEach(function(upgrade_definition, k) {
@@ -53,7 +34,7 @@ Upgrades.prototype.addUpgrades = function() {
             upgrade_sprite.inputEnabled = true;
             upgrade_sprite.input.useHandCursor = true; //if you want a hand cursor
             upgrade_sprite.events.onInputDown.add(function(clicked_sprite) {
-                self.purchaseUpgrades(clicked_sprite);
+                this.purchaseUpgrades(clicked_sprite);
             }, this);
 
             upgrade_sprite.events.onInputOver.add(function() {
@@ -70,7 +51,7 @@ Upgrades.prototype.addUpgrades = function() {
             app.upgrade_sprites[upgrade_definition.sprite] = upgrade_sprite;
         }
 
-    });
+    }, this);
 }
 
 Upgrades.prototype.getActiveUpgrade = function(sprite) {

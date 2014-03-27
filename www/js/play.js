@@ -1,11 +1,6 @@
 var play_state = {
 
-    // now done in loader state
     preload: function() {
-    },
-
-    // Fuction called after 'preload' to setup the game
-    create: function() {
         app = {
             score: 0,
             alive: true,
@@ -30,16 +25,20 @@ var play_state = {
             upgrades_available: [], // all the upgrade definitions that are available
         };
 
+        // setup the upgrades
+        app.upgrades = new Upgrades().load();
+    },
+
+    // Fuction called after 'preload' to setup the game
+    create: function() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.tileSprite(0, 0, 800, 600, 'background');
 
         // Display the gun on the screen
-
         this.base = game.add.sprite(game.world.centerX-11, game.world.centerY, 'gun_base');
 
         this.base.enableBody = true;
         this.base.anchor.setTo(0.5, 0.5);
-        // this.base.width = 100;
         // this.base.physicsBodyType = Phaser.Physics.ARCADE;
 
         game.physics.enable(this.base, Phaser.Physics.ARCADE);
@@ -56,9 +55,6 @@ var play_state = {
             // console.log('tapped');
             self.fire(e);
         }, this);
-
-        // setup the upgrades
-        app.upgrades = new Upgrades();
 
         // Create a group of enemies
         app.enemies = game.add.group();
