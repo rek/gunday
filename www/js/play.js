@@ -24,8 +24,8 @@ var play_state = {
             enemies_alive: [],
             enemies_count: 0,
             upgrade_position: 30, // where to show the next upgrade
-            upgrades_available: [],
-            upgrades_active: {},
+            upgrade_sprites: {}, // once made, here is a list of the sprites
+            upgrades_available: [], // all the upgrade definitions that are available
         };
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -133,7 +133,7 @@ var play_state = {
             // reduce the alive count of baddies
             app.enemies_count--;
             // check for new upgrades
-            app.upgrades.checkUpgrades();
+            app.upgrades.addUpgrades();
             // increment dificulity
             app.spawn_amount = Math.floor(app.spawn_amount + app.increment_spawn);
 
@@ -144,7 +144,7 @@ var play_state = {
     restart_game: function() {
         // Remove the timer
         this.game.time.events.remove(this.timer);
-        // Start the 'main' state, which restarts the game
+        // Start the 'menu' state, which restarts the game
         this.game.state.start('menu');
     },
 
