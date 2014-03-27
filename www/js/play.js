@@ -12,7 +12,7 @@ var play_state = {
             delay: 2.5,
             spawn_amount: 1,
             scale: 2,
-            fireRate: 200,
+            fireRate: 1000,
             nextFire: 10,
             fireDisable: false, // if over an upgrade etc
             increment_time: 0.005,
@@ -31,20 +31,19 @@ var play_state = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.tileSprite(0, 0, 800, 600, 'background');
 
-        var x = game.world.centerX, y = game.world.centerY;
-
         // Display the gun on the screen
-        this.base = game.add.sprite(x-10, y, 'gun_base');
+        this.base = game.add.sprite(game.world.centerX-10, game.world.centerY, 'gun_base');
         this.base.enableBody = true;
         this.base.anchor.setTo(0.5, 0.5);
         // this.base.width = 100;
         // this.base.physicsBodyType = Phaser.Physics.ARCADE;
 
         game.physics.enable(this.base, Phaser.Physics.ARCADE);
-        this.gun = game.add.sprite(x+11-10, y+12, 'gun');
+        this.gun = game.add.sprite(game.world.centerX+1, game.world.centerY+12, 'gun');
         this.gun.enableBody = true;
         this.gun.anchor.setTo(0.5, 0.7); // set a good rotation point
 
+        // setup the bullets
         this.create_bullets();
 
         var self = this;
@@ -52,6 +51,9 @@ var play_state = {
             // console.log('tapped');
             self.fire(e);
         }, this);
+
+        // setup the upgrades
+        app.upgrades = new Upgrades();
 
         // Create a group of enemies
         app.enemies = game.add.group();
@@ -86,13 +88,13 @@ var play_state = {
     },
 
     fire: function() {
-        console.log('Next fire: ' + app.nextFire );
+        // console.log('Next fire: ' + app.nextFire );
         if (app.alive && !app.fireDisable && game.time.now > app.nextFire && this.bullets.countDead() > 0)
         {
             app.nextFire = game.time.now + app.fireRate;
             var bullet = this.bullets.getFirstDead();
-            // bullet.reset(this.gun.x - 2, this.gun.y - 4);
-            bullet.reset(this.base.x + 4, this.base.y + 5);
+            // set the bullets to come from the center
+            bullet.reset(this.base.x-2, this.base.y-2);
             // face outwards
             bullet.rotation = game.physics.arcade.angleToPointer(bullet) + 89.5;
             // move outwards
@@ -139,7 +141,7 @@ var play_state = {
 
     check_upgrades: function() {
         // check what upgrades are in our pay grade
-        app.upgrades_available = _.filter(upgrades, function(u) {
+        app.upgrades_available = _.filter(app.upgrades.getAll(), function(u) {
             return u.price <= app.score;
         });
 
@@ -236,11 +238,10 @@ var play_state = {
             sides['direction' + Math.floor(Math.random() * 4)]();
             // rotate in the middle
             enemy.anchor.setTo(0.5, 0.5);
-            // face the base (center)
-
+            // animate the movement
             enemy.animations.add('walk');
             enemy.animations.play('walk', 15, true);
-
+            // face the base (center)
             enemy.rotation = game.physics.arcade.angleBetween(enemy, this.base) - 89.5;
             // e.body.velocity = Math.random() * 10;
             // enemy.body.angularVelocity = Math.floor(Math.random() * 100);
@@ -257,6 +258,7 @@ var play_state = {
         game.debug.text('Spawn: ' + app.spawn_amount, 100, 20);
         // game.debug.text('Delay: ' + app.delay, 200, 45);
         game.debug.text('Alive: ' + app.enemies_count, 100, 35);
+        game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
 
     }
 };
