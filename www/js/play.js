@@ -132,9 +132,8 @@ var play_state = {
             app.score_label.setText(++app.score);
             // reduce the alive count of baddies
             app.enemies_count--;
-
+            // check for new upgrades
             app.upgrades.checkUpgrades();
-
             // increment dificulity
             app.spawn_amount = Math.floor(app.spawn_amount + app.increment_spawn);
 
@@ -145,7 +144,6 @@ var play_state = {
     restart_game: function() {
         // Remove the timer
         this.game.time.events.remove(this.timer);
-
         // Start the 'main' state, which restarts the game
         this.game.state.start('menu');
     },
@@ -168,8 +166,8 @@ var play_state = {
                 enemy = app.enemies.create(game.world.randomX, game.world.height, app.enemy_types[app.enemy_current]);
             },
         }
-        for (var i = 0; i < max_spawn; i++)
-        {
+
+        for (var i = 0; i < max_spawn; i++) {
             // choose a random side
             sides['direction' + Math.floor(Math.random() * 4)]();
             // rotate in the middle
