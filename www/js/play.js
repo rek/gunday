@@ -2,7 +2,6 @@ var play_state = {
 
     // now done in loader state
     preload: function() {
-
     },
 
     // Fuction called after 'preload' to setup the game
@@ -19,7 +18,7 @@ var play_state = {
             increment_time: 0.005,
             increment_spawn: 0.05,
             bullets: 'bullet-1',
-            enemy_types: ['bug1'],
+            enemy_types: ['bug1walk'],
             enemy_current: 0,
             enemy_speed: 60,
             enemies_alive: [],
@@ -235,6 +234,10 @@ var play_state = {
             // rotate in the middle
             enemy.anchor.setTo(0.5, 0.5);
             // face the base (center)
+
+            enemy.animations.add('walk');
+            enemy.animations.play('walk', 15, true);
+
             enemy.rotation = game.physics.arcade.angleBetween(enemy, this.base) - 89.5;
             // e.body.velocity = Math.random() * 10;
             // enemy.body.angularVelocity = Math.floor(Math.random() * 100);
