@@ -2,10 +2,10 @@ var mobile_found = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Min
 
 var libsToLoad = [
     'jquery',
+    'lodash',
     'menu',
     'play',
     'upgrades',
-    'lodash',
     'phaser'
 ];
 
@@ -22,7 +22,7 @@ if (mobile_found) {
 }
 
 require(libsToLoad, function(
-    $
+    $,_
     // ,Phaser
 ){
 
@@ -74,6 +74,8 @@ require(libsToLoad, function(
 
             game.load.image('upgrade1', 'img/gun/base.png');
             game.load.image('upgrade2', 'img/gun/base.png');
+            game.load.spritesheet('bug1walk', 'img/bug-1-sprite.png', 40, 41, 6);
+
 
 
             // game.load.audio('jump', 'assets/jump.wav');
