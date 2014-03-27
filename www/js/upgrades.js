@@ -2,22 +2,34 @@ Upgrades = function (app, game) {
   // boom yeh!
 }
 
-Upgrades.prototype.all = {
-    'upgrade1': {
+Upgrades.prototype.all = [
+    {
         sprite: 'upgrade1', // the sprite name
         price: 2, // the cost of this upgrade
         size: 30, // the height of the sprite
         type: 'fireRate', // the key to change
-        amount: -10 // the amount to change it
+        amount: -10, // the amount to change the type field
+        action: function(app){
+            // upgrade if its ok to do so.
+            var new_amount = app.fireRate - 100;
+            app.fireRate = new_amount > app.fireLimit ? new_amount : app.fireLimit;
+            // console.log('Changing ' + upgrade.type + ' from: ' + app[upgrade.type] + ' -> ' + new_amount);
+
+            // var new_amount = app[upgrade.type] + upgrade.amount;
+            // app[upgrade.type] = new_amount > app.fireLimit ? app[upgrade.type] + upgrade.amount : app.fireLimit;
+        }
     },
-    'upgrade2': {
+    {
         sprite: 'upgrade2',
         price: 4,
         size: 30,
         type: 'fireRate',
-        amount: -20
+        amount: -20,
+        action: function(app){
+            app.fireAmount++;
+        }
     }
-};
+];
 
 /*
 * Add all the upgrades we can afford
@@ -61,13 +73,17 @@ Upgrades.prototype.addUpgrades = function() {
     });
 }
 
+Upgrades.prototype.getActiveUpgrade = function(sprite) {
+    return _.find(app.upgrades_available, { 'sprite': sprite.key });
+};
+
 /*
 * Purchase an upgrade
 */
 Upgrades.prototype.purchaseUpgrades = function(sprite) {
     console.log('Purchasing upgrade: ' + sprite.key);
 
-    var upgrade = this.all[sprite.key];
+    var upgrade = this.getActiveUpgrade(sprite);
 
     if(app.score - upgrade.price < 0) return false; // saftey
 
@@ -76,11 +92,7 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
     app.score_label.setText(app.score);
 
     // do upgrade
-    var new_amount = app[upgrade.type] + upgrade.amount;
-    // console.log('Changing ' + upgrade.type + ' from: ' + app[upgrade.type] + ' -> ' + new_amount);
-
-    // make sure it stays above 0
-    app[upgrade.type] = new_amount > 0 ? app[upgrade.type] + upgrade.amount : 0;
+    upgrade.action(app);
 
     // re-enable fire
     app.fireDisable = false;
@@ -95,21 +107,22 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 Upgrades.prototype.removeUpgrades = function() {
     // check all sprites showing
     _(app.upgrade_sprites).each(function(upgrade_sprite) {
-        var upgrade = this.all[upgrade_sprite.key];
+        var upgrade = this.getActiveUpgrade(upgrade_sprite);
         // and remove the ones we cannot afford
         if(upgrade.price > app.score) {
-            this.removeUpgrade(upgrade_sprite);
+            this.removeUpgrade(upgrade_sprite, upgrade);
         }
-
     }, this);
 }
 
 /*
 * Remove one upgrade from displaying.
+*
+* @param sprite  {sprite} Upgrade sprite on screen
+* @param upgrade {object} Definition object of upgrade
 */
-Upgrades.prototype.removeUpgrade = function(sprite) {
+Upgrades.prototype.removeUpgrade = function(sprite, upgrade) {
     console.log('Removing upgrade: ' + sprite.key);
-    var upgrade = this.all[sprite.key];
 
     // reset the upgrade position
     app.upgrade_position = app.upgrade_position - upgrade.size;

@@ -13,8 +13,10 @@ var play_state = {
             spawn_amount: 1,
             scale: 2,
             fireRate: 1000,
-            nextFire: 10,
+            _fireCooldown: 0, // internal counter to work with fireRate
+            fireLimit: 100,
             fireDisable: false, // if over an upgrade etc
+            fireAmount: 1,
             increment_time: 0.005,
             increment_spawn: 0.05,
             bullets: 'bullet-1',
@@ -91,10 +93,10 @@ var play_state = {
     },
 
     fire: function() {
-        // console.log('Next fire: ' + app.nextFire );
-        if (app.alive && !app.fireDisable && game.time.now > app.nextFire && this.bullets.countDead() > 0)
+        // console.log('Next fire: ' + app._fireCooldown );
+        if (app.alive && !app.fireDisable && game.time.now > app._fireCooldown && this.bullets.countDead() > 0)
         {
-            app.nextFire = game.time.now + app.fireRate;
+            app._fireCooldown = game.time.now + app.fireRate;
             var bullet = this.bullets.getFirstDead();
             // set the bullets to come from the center
             bullet.reset(this.base.x-2, this.base.y-2);
