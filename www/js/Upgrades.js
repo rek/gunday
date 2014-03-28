@@ -33,7 +33,7 @@ Upgrades.prototype.addUpgrades = function() {
 
             // create an upgrade sprite
             var upgrade_sprite = game.add.sprite(game.world.width-60, app.upgrade_position, upgrade_definition.sprite);
-            var countText = ' X ' + ++upgrade_definition.count;
+            var countText = ' X ' + upgrade_definition.count;
             upgrade_sprite.label = game.add.text(game.world.width-35, app.upgrade_position+4, countText, this.label);
             upgrade_sprite.inputEnabled = true;
             upgrade_sprite.input.useHandCursor = true; //if you want a hand cursor
@@ -60,6 +60,9 @@ Upgrades.prototype.addUpgrades = function() {
 
 /*
 * Filter the avaiable upgrades and return the ones that are currently displayed
+*
+* @param {sprite} sprite - Sprite on screen
+*/
 */
 Upgrades.prototype.getActiveUpgrade = function(sprite) {
     return _.find(app.upgrades_available, { 'sprite': sprite.key });
@@ -67,6 +70,8 @@ Upgrades.prototype.getActiveUpgrade = function(sprite) {
 
 /*
 * Purchase an upgrade
+*
+* @param {sprite} sprite - Sprite on screen
 */
 Upgrades.prototype.purchaseUpgrades = function(sprite) {
     // console.log('Purchasing upgrade: ' + sprite.key);
@@ -87,6 +92,7 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 
     // re-enable fire
     app[upgrade.object].fireDisable = false;
+    app[upgrade.object].count++;
 
     // check to see if after buying this we now cannot afford others
     this.removeUpgrades();
@@ -109,8 +115,8 @@ Upgrades.prototype.removeUpgrades = function() {
 /*
 * Remove one upgrade from displaying.
 *
-* @param sprite  {sprite} Upgrade sprite on screen
-* @param upgrade {object} Definition object of upgrade
+* @param {sprite} sprite - Upgrade sprite on screen
+* @param {object} upgrade - Definition object of upgrade
 */
 Upgrades.prototype.removeUpgrade = function(sprite, upgrade) {
     // console.log('Removing upgrade: ' + sprite.key);
