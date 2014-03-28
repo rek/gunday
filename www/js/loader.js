@@ -3,10 +3,10 @@ var mobile_found = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Min
 var libsToLoad = [
     'jquery',
     'lodash',
+    'Upgrades',
+    'Fireable',
     'menu',
     'play',
-    'upgrades',
-    'upgrades/simpleUpgrades',
     'phaser'
 ];
 
@@ -22,12 +22,7 @@ if (mobile_found) {
     libsToLoad.push('//localhost:35729/livereload.js');
 }
 
-require(libsToLoad, function(
-    $,_
-    // ,Phaser
-){
-
-    app.score = 0;
+require(libsToLoad, function($) {
     app.dims = {
         maxWidth: 400,
         maxHeight: 490
@@ -68,13 +63,13 @@ require(libsToLoad, function(
         preload: function() {
             game.stage.backgroundColor = '#333';
             game.load.image('gun', 'img/gun/turret.png');
-            game.load.image('gun_base', 'img/gun/base.png');
+            game.load.image('base', 'img/gun/base.png');
             game.load.image('bug1', 'img/bug-1-1.png');
             game.load.image('bullet-1', 'img/bullet-1.png');
             game.load.image('background', 'img/bgtile.png');
 
             game.load.image('upgrade1', 'img/gun/base.png');
-            game.load.image('upgrade2', 'img/gun/base.png');
+            game.load.image('upgrade2', 'img/gun/turret.png');
             game.load.spritesheet('bug1walk', 'img/bug-1-sprite.png', 40, 41, 6);
 
 

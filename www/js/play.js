@@ -7,14 +7,9 @@ var play_state = {
             delay: 2.5,
             spawn_amount: 1,
             scale: 2,
-            fireRate: 1000,
-            _fireCooldown: 0, // internal counter to work with fireRate
-            fireLimit: 100,
-            fireDisable: false, // if over an upgrade etc
-            fireAmount: 1,
             increment_time: 0.005,
-            increment_spawn: 0.05,
-            bullets: 'bullet-1',
+            increment_spawn: 0.05, // the rate enemy spawing is quickened
+            bullet: 'bullet-1',
             enemy_types: ['bug1walk'],
             enemy_current: 0,
             enemy_speed: 60,
@@ -35,7 +30,7 @@ var play_state = {
         game.add.tileSprite(0, 0, 800, 600, 'background');
 
         // Display the gun on the screen
-        this.base = game.add.sprite(game.world.centerX-11, game.world.centerY, 'gun_base');
+        this.base = game.add.sprite(game.world.centerX-11, game.world.centerY, 'base');
 
         this.base.enableBody = true;
         this.base.anchor.setTo(0.5, 0.5);
@@ -50,10 +45,16 @@ var play_state = {
         // setup the bullets
         this.create_bullets();
 
+        // list of objects that can fire stuff
+        // app.fireables = {};
+
+        this.base.fire = new Fireable();
+
+
         var self = this;
         this.game.input.onDown.add(function(e){
             // console.log('tapped');
-            self.fire(e);
+            self.fire(this.base);
         }, this);
 
         // Create a group of enemies
@@ -88,18 +89,31 @@ var play_state = {
         }
     },
 
-    fire: function() {
-        // console.log('Next fire: ' + app._fireCooldown );
-        if (app.alive && !app.fireDisable && game.time.now > app._fireCooldown && this.bullets.countDead() > 0)
+    fire: function(source) {
+        // console.log('Firing from: ' + source.key );
+        // var fireable = app.fireables[source.key]; // get the object that is to be fired from
+        var fireable = source.fire;
+        if (
+                app.alive                                 // if the object is alive
+                && !fireable.fireDisable                  // and not disabled
+                && game.time.now > fireable._fireCooldown // timeout between bullets
+                && this.bullets.countDead() > 0           // ?
+            )
         {
-            app._fireCooldown = game.time.now + app.fireRate;
-            var bullet = this.bullets.getFirstDead();
-            // set the bullets to come from the center
-            bullet.reset(this.base.x-2, this.base.y-2);
-            // face outwards
-            bullet.rotation = game.physics.arcade.angleToPointer(bullet) + 89.5;
-            // move outwards
-            game.physics.arcade.moveToPointer(bullet, 300);
+            // update the cool down for the next fire event
+            fireable._fireCooldown = game.time.now + fireable.fireRate;
+            var bullet_angle = 89.5;
+            _.times(fireable.fireAmount, function() {
+                // console.log('Creating a bullet at: ' + bullet_angle);
+                var bullet = this.bullets.getFirstDead();
+                // set the bullets to come from the center
+                bullet.reset(source.x - 2, source.y - 2);
+                // face outwards
+                bullet.rotation = game.physics.arcade.angleToPointer(bullet) + bullet_angle;
+                bullet_angle+=5;
+                // move outwards
+                game.physics.arcade.moveToPointer(bullet, 300);
+            }, this);
         }
     },
 
@@ -107,7 +121,7 @@ var play_state = {
         this.bullets = game.add.group();
         this.bullets.enableBody = true;
         // this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this.bullets.createMultiple(10, app.bullets);
+        this.bullets.createMultiple(10, app.bullet);
 
         this.bullets.setAll('exists', false);
         this.bullets.setAll('visible', false);
@@ -117,7 +131,7 @@ var play_state = {
 
     enemy_hit: function(object, enemy) {
         // an enemy has hit the base
-        if (object.key === 'gun_base') {
+        if (object.key === 'base') {
             // console.log('gun killed');
             app.alive = false;
             this.game.time.events.remove(this.timer);
@@ -191,7 +205,8 @@ var play_state = {
         // game.debug.text('Delay: ' + app.delay, 200, 45);
         game.debug.text('Alive: ' + app.enemies_count, 100, 35);
         game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
-        game.debug.text('Firerate: ' + app.fireRate, 100, 65);
+        // game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
+        // game.debug.text('Firerate: ' + app.fireables.base.fireRate, 100, 65);
 
     }
 };

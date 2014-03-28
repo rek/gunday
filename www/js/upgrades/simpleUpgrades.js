@@ -1,7 +1,8 @@
 var simpleUpgrades = [
     {
         sprite: 'upgrade1', // the sprite name
-        price: 2, // the cost of this upgrade
+        object: 'base',     // the object to apply this upgrade to
+        price: 5, // the cost of this upgrade
         size: 30, // the height of the sprite
         action: function(app) {
             // upgrade if its ok to do so.
@@ -15,10 +16,20 @@ var simpleUpgrades = [
     },
     {
         sprite: 'upgrade2',
-        price: 4,
+        price: 10,
         size: 30,
         action: function(app) {
             app.fireAmount++;
         }
     }
 ];
+
+
+// var simpleUpgradesPath = [
+
+//     {
+
+
+//     }
+
+// ];
