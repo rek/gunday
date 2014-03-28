@@ -1,5 +1,6 @@
 var Upgrades = function () {
     // boom yeh!
+    this.label = { font: '14px Arial', fill: '#ccc' };
 }
 
 Upgrades.prototype.all = [];
@@ -11,6 +12,7 @@ Upgrades.prototype.load = function(upgrade) {
         self.all = _.union(self.all, simpleUpgrades);
     });
 
+    // used for init, so we return ourselves
     return this;
 };
 
@@ -19,8 +21,8 @@ Upgrades.prototype.load = function(upgrade) {
 */
 Upgrades.prototype.addUpgrades = function() {
     // check what upgrades are in our pay grade
-    app.upgrades_available = _.filter(this.all, function(u) {
-        return u.price <= app.score;
+    app.upgrades_available = _.filter(this.all, function(upgrade) {
+        return upgrade.price <= app.score && upgrade.count < upgrade.max;
     });
 
     // show all the upgrades we are allows
@@ -31,6 +33,8 @@ Upgrades.prototype.addUpgrades = function() {
 
             // create an upgrade sprite
             var upgrade_sprite = game.add.sprite(game.world.width-60, app.upgrade_position, upgrade_definition.sprite);
+            var countText = ' X ' + ++upgrade_definition.count;
+            upgrade_sprite.label = game.add.text(game.world.width-35, app.upgrade_position+4, countText, this.label);
             upgrade_sprite.inputEnabled = true;
             upgrade_sprite.input.useHandCursor = true; //if you want a hand cursor
             upgrade_sprite.events.onInputDown.add(function(clicked_sprite) {
@@ -73,7 +77,10 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 
     // update the score
     app.score = app.score - upgrade.price;
-    app.score_label.setText(app.score);
+    app.scoreLabel.setText(app.score);
+
+    // upgrade the price
+    upgrade.price = upgrade.price * upgrade.priceIncrement;
 
     // do upgrade
     upgrade.action(app[upgrade.object]);
@@ -110,6 +117,9 @@ Upgrades.prototype.removeUpgrade = function(sprite, upgrade) {
 
     // reset the upgrade position
     app.upgrade_position = app.upgrade_position - upgrade.size;
+
+    // remove the count label
+    sprite.label.destroy();
 
     // remove upgrade button
     sprite.kill();

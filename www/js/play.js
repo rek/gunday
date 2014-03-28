@@ -66,8 +66,8 @@ var play_state = {
         this.timer = this.game.time.events.loop(Phaser.Timer.SECOND * app.delay, this.spawn_random, this);
 
         // Add a score label on the top left of the screen
-        var style = { font: '30px Arial', fill: '#ffffff' };
-        app.score_label = game.add.text(20, 20, '0', style);
+        app.style  = { font: '30px Arial', fill: '#ffffff' };
+        app.scoreLabel = game.add.text(20, 20, '0', app.style);
     },
 
     // This function is called 60 times per second
@@ -117,8 +117,8 @@ var play_state = {
                 bullet.rotation = game.physics.arcade.angleToPointer(bullet) + 1.5;
 
                 // move outwards
-                // game.physics.arcade.moveToPointer(bullet, 300);
                 game.physics.arcade.moveToXY(bullet, game.input.worldX + bullet_angle, game.input.worldY, 300);
+                // game.physics.arcade.moveToPointer(bullet, 300);
 
             }, this);
         }
@@ -146,15 +146,16 @@ var play_state = {
 
         } else { // a bullet has hit an enemy
             // check to make sure this enemy is alive
-            console.log(enemy.alive);
+            // console.log(enemy.alive);
             // if(enemy.alive) {}
             object.kill();
             // enemy.alive = false;
             // increment the score
 
             enemy.health--;
-            app.score = app.score + (enemy.health >= 0 ? 1 : 0);
-            app.score_label.setText(app.score);
+            // app.score = app.score + (enemy.health >= 0 ? 1 : 0);
+            app.scoreLabel.setText(++app.score);
+
             enemy.kill();
 
 
