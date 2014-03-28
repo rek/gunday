@@ -2,7 +2,7 @@ var simpleUpgrades = [
     {
         sprite: 'upgrade1', // the sprite name
         object: 'base',     // the object to apply this upgrade to
-        price: 2, // the cost of this upgrade
+        price: 5, // the cost of this upgrade
         size: 30, // the height of the sprite
         action: function(object) {
             // upgrade if its ok to do so.
@@ -16,10 +16,11 @@ var simpleUpgrades = [
     },
     {
         sprite: 'upgrade2',
+        object: 'base',
         price: 10,
         size: 30,
-        action: function(app) {
-            app.fireAmount++;
+        action: function(object) {
+            object.fire.fireAmount++;
         }
     }
 ];

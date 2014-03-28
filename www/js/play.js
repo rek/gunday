@@ -102,17 +102,24 @@ var play_state = {
         {
             // update the cool down for the next fire event
             fireable._fireCooldown = game.time.now + fireable.fireRate;
-            var bullet_angle = 89.5;
+
+            var i = 0;
+            var degrees = [ [0], [-10, 10], [-15, 0, 15] ];
             _.times(fireable.fireAmount, function() {
                 // console.log('Creating a bullet at: ' + bullet_angle);
                 var bullet = this.bullets.getFirstDead();
+                bullet.anchor.setTo(0.5, 0.5);
                 // set the bullets to come from the center
-                bullet.reset(source.x - 2, source.y - 2);
+                bullet.reset(source.x, source.y);
                 // face outwards
-                bullet.rotation = game.physics.arcade.angleToPointer(bullet) + bullet_angle;
-                bullet_angle+=5;
+                bullet_angle = degrees[fireable.fireAmount-1][i++];
+                // make bullet face outwards
+                bullet.rotation = game.physics.arcade.angleToPointer(bullet) + 1.5;
+
                 // move outwards
-                game.physics.arcade.moveToPointer(bullet, 300);
+                // game.physics.arcade.moveToPointer(bullet, 300);
+                game.physics.arcade.moveToXY(bullet, game.input.worldX + bullet_angle, game.input.worldY, 300);
+
             }, this);
         }
     },
@@ -138,10 +145,19 @@ var play_state = {
             game.state.start('menu');
 
         } else { // a bullet has hit an enemy
+            // check to make sure this enemy is alive
+            console.log(enemy.alive);
+            // if(enemy.alive) {}
             object.kill();
-            enemy.kill();
+            // enemy.alive = false;
             // increment the score
-            app.score_label.setText(++app.score);
+
+            enemy.health--;
+            app.score = app.score + (enemy.health >= 0 ? 1 : 0);
+            app.score_label.setText(app.score);
+            enemy.kill();
+
+
             // reduce the alive count of baddies
             app.enemies_count--;
             // check for new upgrades
