@@ -35,7 +35,7 @@ Upgrades.prototype.addUpgrades = function() {
             var upgrade_sprite = game.add.sprite(game.world.width-60, app.upgrade_position, 'atlas');
             upgrade_sprite.frameName = upgrade_definition.sprite;
             upgrade_sprite.label = game.add.text(
-                game.world.width-35,
+                game.world.width - 30,
                 app.upgrade_position + 4,
                 '  ' + upgrade_definition.count,
                 this.label

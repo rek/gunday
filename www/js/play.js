@@ -131,9 +131,15 @@ var play_state = {
         this.bullets.setAll('outOfBoundsKill', true);
     },
 
+    /**
+    * When something hits an enemy
+    *
+    * @param {sprite} object - Object hitting the enemy
+    * @param {sprite} enemy - Enemy being hit
+    */
     enemy_hit: function(object, enemy) {
         // an enemy has hit the base
-        if (object.key === 'base') {
+        if (object.frameName === this.gun.frameName) {
             // console.log('gun killed');
             app.alive = false;
             this.game.time.events.remove(this.timer);
