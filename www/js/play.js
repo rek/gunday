@@ -172,6 +172,11 @@ var play_state = {
         this.game.state.start('menu');
     },
 
+    /*
+    * Create enemies
+    *
+    * @param {int} amount - Amount of the current enemy to create
+    */
     spawn_random: function(amount) {
         var max_spawn = Math.floor(Math.random() * (amount || app.spawn_amount) + 1);
         // console.log('making some bad guys: ' + max_spawn);
