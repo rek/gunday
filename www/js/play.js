@@ -9,7 +9,7 @@ var play_state = {
             scale: 2,
             increment_time: 0.005,
             increment_spawn: 0.05, // the rate enemy spawing is quickened
-            bullet: 'bullet-1',
+            bullet: 'bullet-1.png',
             enemy_types: ['bug1walk'],
             enemy_current: 0,
             enemy_speed: 60,
@@ -30,19 +30,14 @@ var play_state = {
         game.add.tileSprite(0, 0, 800, 600, 'atlas', 'bgtile.png' );
 
         // Display the gun on the screen
-        app.base = game.add.sprite(game.world.centerX-11, game.world.centerY, 'atlas');
+        app.base = game.add.sprite(game.world.centerX - 11, game.world.centerY, 'atlas');
         app.base.frameName = 'gun/base.png';
-
         app.base.enableBody = true;
         app.base.anchor.setTo(0.5, 0.5);
-        // app.base.physicsBodyType = Phaser.Physics.ARCADE;
-
         game.physics.enable(app.base, Phaser.Physics.ARCADE);
 
-        this.gun = game.add.sprite(game.world.centerX+.5, game.world.centerY+11, 'atlas');
+        this.gun = game.add.sprite(game.world.centerX + 0.5, game.world.centerY + 11, 'atlas');
         this.gun.frameName = 'gun/turret.png';
-
-
         this.gun.enableBody = true;
         this.gun.anchor.setTo(0.5, 0.68); // set a good rotation point
 
@@ -129,8 +124,7 @@ var play_state = {
         this.bullets = game.add.group();
         this.bullets.enableBody = true;
         // this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this.bullets.createMultiple(10, 'atlas' , 'bullet-1.png');
-
+        this.bullets.createMultiple(10, 'atlas' , app.bullet);
         this.bullets.setAll('exists', false);
         this.bullets.setAll('visible', false);
         this.bullets.setAll('checkWorldBounds', true);
