@@ -11,6 +11,7 @@ Upgrades.defaults = {
     size: 30,         // height of the sprite
     count: 0,         // currently applied upgrades
     max: 2,           // amount of upgrades possible
+    disabled: false,  // disabled makes the upgrade look grey
     action: function(object) {
         console.log('Default upgrade action.');
     }
@@ -20,7 +21,7 @@ Upgrades.prototype.all = [];
 
 Upgrades.prototype.load = function(upgrade) {
     var self = this;
-    require(['upgrades/simpleUpgrades'], function() {
+    require(['upgrades/simpleUpgrades', 'upgrades/sentryUpgrades'], function() {
         // console.log('Loading ' + simpleUpgrades.length + ' upgrades.');
         self.all = _.flatten([self.all, simpleUpgrades]);
     });
@@ -40,10 +41,11 @@ Upgrades.prototype.addUpgrades = function() {
 
     // show all the upgrades we are allows
     _(app.upgrades_available).forEach(function(upgrade_definition, k) {
-
         // add the upgrade if it is not being displayed already
-        // if(undefined === app.upgrade_sprites[upgrade_definition.sprite]) {
-        if (upgrade_definition.disabled) {
+        if (
+            undefined === app.upgrade_sprites[upgrade_definition.sprite]
+            || !upgrade_definition.disabled
+        ) {
             // console.log('Displaying upgrade: ' + upgrade_definition.sprite);
 
             // create an upgrade sprite
@@ -78,7 +80,7 @@ Upgrades.prototype.addUpgrades = function() {
         } else {
             upgrade_definition.disabled = false; // re-enable the sprite
             // reset it to active
-            app[upgrade_definition.object].frameName = upgrade_definition.sprite;
+            app[upgrade_definition.sprite].frameName = upgrade_definition.sprite;
         }
 
     }, this);

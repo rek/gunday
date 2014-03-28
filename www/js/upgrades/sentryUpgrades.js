@@ -1,6 +1,6 @@
 var sentryUpgrades = [
-    _.merge(Upgrades.defaults, {
-        sprite: 'sentry1',
+    _.defaults({
+        sprite: 'gun/turret.png',
         price: 5,
         action: function(app) {
             app.sentrys[this.count] = game.add.sprite(
@@ -15,5 +15,5 @@ var sentryUpgrades = [
 
 
         }
-    }
+    }, Upgrades.defaults)
 ];
