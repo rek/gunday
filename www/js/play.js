@@ -9,7 +9,7 @@ var play_state = {
             scale: 2,
             increment_time: 0.005,
             increment_spawn: 0.05, // the rate enemy spawing is quickened
-            bullet: 'bullet-1',
+            bullet: 'bullet-1.png',
             enemy_types: ['bug1walk'],
             enemy_current: 0,
             enemy_speed: 60,
@@ -124,8 +124,7 @@ var play_state = {
         this.bullets = game.add.group();
         this.bullets.enableBody = true;
         // this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this.bullets.createMultiple(10, 'atlas' , 'bullet-1.png');
-
+        this.bullets.createMultiple(10, 'atlas' , app.bullet);
         this.bullets.setAll('exists', false);
         this.bullets.setAll('visible', false);
         this.bullets.setAll('checkWorldBounds', true);
