@@ -26,7 +26,7 @@ var simpleUpgrades = [
         }
     }),
     _.merge(Upgrades.defaults, {
-        sprite: 'bullet-speed.png',
+        sprite: 'bullet-miltiplyer.png',
         price: 10,
         action: function(object) {
             object.fire.fireAmount++;

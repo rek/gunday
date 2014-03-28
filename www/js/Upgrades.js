@@ -69,7 +69,7 @@ Upgrades.prototype.addUpgrades = function() {
 * @param {sprite} sprite - Sprite on screen
 */
 Upgrades.prototype.getActiveUpgrade = function(sprite) {
-    return _.find(app.upgrades_available, { 'sprite': sprite.key });
+    return _.find(app.upgrades_available, { 'sprite': sprite.frameName });
 };
 
 /*
@@ -78,7 +78,7 @@ Upgrades.prototype.getActiveUpgrade = function(sprite) {
 * @param {sprite} sprite - Sprite on screen
 */
 Upgrades.prototype.purchaseUpgrades = function(sprite) {
-    // console.log('Purchasing upgrade: ' + sprite.key);
+    // console.log('Purchasing upgrade: ' + sprite.frameName);
 
     var upgrade = this.getActiveUpgrade(sprite);
 
@@ -123,17 +123,19 @@ Upgrades.prototype.removeUpgrades = function() {
 * @param {object} upgrade - Definition object of upgrade
 */
 Upgrades.prototype.removeUpgrade = function(sprite, upgrade) {
-    // console.log('Removing upgrade: ' + sprite.key);
+    // console.log('Removing upgrade: ' + sprite.frameName);
 
     // reset the upgrade position
-    app.upgrade_position = app.upgrade_position - upgrade.size;
+    // app.upgrade_position = app.upgrade_position - upgrade.size;
 
     // remove the count label
-    sprite.label.destroy();
+    // sprite.label.destroy();
 
     // remove upgrade button
-    sprite.kill();
+    // sprite.kill();
+
+    sprite.frameName = 'disabled-' + upgrade_definition.sprite;
 
     // remove it from the list of upgrades
-    delete app.upgrade_sprites[sprite.key];
+    // delete app.upgrade_sprites[sprite.frameName];
 }
