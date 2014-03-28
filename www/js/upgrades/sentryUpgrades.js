@@ -1,6 +1,8 @@
 var sentryUpgrades = [
     _.merge(Upgrades.defaults, {
-        action: function(object) {
+        sprite: 'sentry1',
+        price: 5,
+        action: function() {
 
         }
     }
