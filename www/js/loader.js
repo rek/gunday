@@ -64,6 +64,8 @@ require(libsToLoad, function($) {
             game.stage.backgroundColor = '#333';
 
             game.load.atlas('atlas', 'img/atlas/images.png', 'img/atlas/images.json');
+            
+            game.load.spritesheet('bug1walk', 'img/bug-1-sprite.png', 40, 41, 6);
 
             // game.load.image('gun', 'img/gun/turret.png');
             // game.load.image('base', 'img/gun/base.png');
@@ -74,7 +76,6 @@ require(libsToLoad, function($) {
             // game.load.spritesheet('upgradebuttons','img/upgradebuttons', 33, 33 )
             // game.load.image('upgrade1', 'img/gun/base.png');
             // game.load.image('upgrade2', 'img/gun/turret.png');
-            // game.load.spritesheet('bug1walk', 'img/bug-1-sprite.png', 40, 41, 6);
 
             // game.load.audio('jump', 'assets/jump.wav');
         },
