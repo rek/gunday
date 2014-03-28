@@ -32,9 +32,14 @@ Upgrades.prototype.addUpgrades = function() {
             // console.log('Displaying upgrade: ' + upgrade_definition.sprite);
 
             // create an upgrade sprite
-            var upgrade_sprite = game.add.sprite(game.world.width-60, app.upgrade_position, upgrade_definition.sprite);
-            var countText = ' X ' + upgrade_definition.count;
-            upgrade_sprite.label = game.add.text(game.world.width-35, app.upgrade_position+4, countText, this.label);
+            var upgrade_sprite = game.add.sprite(game.world.width-60, app.upgrade_position, 'atlas');
+            upgrade_sprite.frameName = upgrade_definition.sprite;
+            upgrade_sprite.label = game.add.text(
+                game.world.width-35,
+                app.upgrade_position + 4,
+                '  ' + upgrade_definition.count,
+                this.label
+            );
             upgrade_sprite.inputEnabled = true;
             upgrade_sprite.input.useHandCursor = true; //if you want a hand cursor
             upgrade_sprite.events.onInputDown.add(function(clicked_sprite) {
@@ -62,7 +67,6 @@ Upgrades.prototype.addUpgrades = function() {
 * Filter the avaiable upgrades and return the ones that are currently displayed
 *
 * @param {sprite} sprite - Sprite on screen
-*/
 */
 Upgrades.prototype.getActiveUpgrade = function(sprite) {
     return _.find(app.upgrades_available, { 'sprite': sprite.key });

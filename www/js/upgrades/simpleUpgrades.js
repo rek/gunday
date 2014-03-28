@@ -13,7 +13,7 @@ Upgrades.defaults = {
 
 var simpleUpgrades = [
     _.merge(Upgrades.defaults, {
-        sprite: 'upgrade1',
+        sprite: 'upgradebuttons.png',
         price: 5,
         action: function(object) {
             // upgrade if its ok to do so.
@@ -26,14 +26,14 @@ var simpleUpgrades = [
         }
     }),
     _.merge(Upgrades.defaults, {
-        sprite: 'upgrade2',
+        sprite: 'upgradebuttons.png',
         price: 10,
         action: function(object) {
             object.fire.fireAmount++;
         }
     }),
     _.merge(Upgrades.defaults, {
-        sprite: 'upgrade3',
+        sprite: 'upgradebuttons.png',
         price: 2,
         action: function(object) {
              // make a sentry

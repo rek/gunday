@@ -15,7 +15,7 @@ var play_state = {
             enemy_speed: 60,
             enemies_alive: [],
             enemies_count: 0,
-            upgrade_position: 30, // where to show the next upgrade
+            upgrade_position: 10, // where to show the next upgrade
             upgrade_sprites: {}, // once made, here is a list of the sprites
             upgrades_available: [], // all the upgrade definitions that are available
         };
