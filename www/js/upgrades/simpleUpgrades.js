@@ -14,7 +14,6 @@ Upgrades.defaults = {
 var simpleUpgrades = [
     _.merge(Upgrades.defaults, {
         sprite: 'upgrade1',
-        object: 'base',
         price: 2,
         action: function(object) {
             // upgrade if its ok to do so.
@@ -26,14 +25,13 @@ var simpleUpgrades = [
             // object.fire[upgrade.type] = newAmount > object.fire.fireLimit ? object.fire[upgrade.type] + upgrade.amount : app.fireLimit;
         }
     }),
-    // _.merge(Upgrades.defaults, {
-    //     sprite: 'upgrade2',
-    //     object: 'base',
-    //     price: 10,
-    //     action: function(object) {
-    //         object.fire.fireAmount++;
-    //     }
-    // }),
+    _.merge(Upgrades.defaults, {
+        sprite: 'upgrade2',
+        price: 10,
+        action: function(object) {
+            object.fire.fireAmount++;
+        }
+    }),
 ];
 
 // var simpleUpgradesPath = [

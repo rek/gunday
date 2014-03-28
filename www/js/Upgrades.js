@@ -9,7 +9,7 @@ Upgrades.prototype.load = function(upgrade) {
     var self = this;
     require(['upgrades/simpleUpgrades'], function() {
         // console.log('Loading ' + simpleUpgrades.length + ' upgrades.');
-        self.all = _.union(self.all, simpleUpgrades);
+        self.all = _.flatten([self.all, simpleUpgrades]);
     });
 
     // used for init, so we return ourselves

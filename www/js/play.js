@@ -37,7 +37,7 @@ var play_state = {
         // app.base.physicsBodyType = Phaser.Physics.ARCADE;
 
         game.physics.enable(app.base, Phaser.Physics.ARCADE);
-        this.gun = game.add.sprite(game.world.centerX+.5, game.world.centerY+11, 'gun');
+        this.gun = game.add.sprite(game.world.centerX+0.5, game.world.centerY+11, 'gun');
 
         this.gun.enableBody = true;
         this.gun.anchor.setTo(0.5, 0.68); // set a good rotation point
@@ -45,11 +45,8 @@ var play_state = {
         // setup the bullets
         this.create_bullets();
 
-        // list of objects that can fire stuff
-        // app.fireables = {};
-
+        // add the fire stuff to the base
         app.base.fire = new Fireable();
-
 
         var self = this;
         this.game.input.onDown.add(function(e){
