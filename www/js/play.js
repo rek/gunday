@@ -139,7 +139,7 @@ var play_state = {
     */
     enemy_hit: function(object, enemy) {
         // an enemy has hit the base
-        if (object.frameName === this.gun.frameName) {
+        if (object.frameName === app.base.frameName) {
             // console.log('gun killed');
             app.alive = false;
             this.game.time.events.remove(this.timer);
