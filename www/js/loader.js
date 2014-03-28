@@ -18,7 +18,7 @@ if (mobile_found) {
     // add cordova when using a mobile device
     libsToLoad.push('../cordova');
 } else {
-    console.log('NOT MOBILE');
+    // console.log('NOT MOBILE');
     libsToLoad.push('//localhost:35729/livereload.js');
 }
 

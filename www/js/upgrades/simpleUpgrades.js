@@ -1,30 +1,38 @@
+Upgrades.defaults = {
+    sprite: 'default',// sprite name  (in loader.js)
+    object: 'base',   // object to apply this upgrade to
+    price: 5,         // cost of this upgrade
+    priceIncrement: 2,// how much to change the price each time. (price * this)
+    size: 30,         // height of the sprite
+    count: 0,         // currently applied upgrades
+    max: 2,           // amount of upgrades possible
+    action: function(object) {
+        console.log('Default upgrade action.');
+    }
+};
+
 var simpleUpgrades = [
-    {
-        sprite: 'upgrade1', // the sprite name
-        object: 'base',     // the object to apply this upgrade to
-        price: 5, // the cost of this upgrade
-        size: 30, // the height of the sprite
+    _.merge(Upgrades.defaults, {
+        sprite: 'upgrade1',
+        price: 2,
         action: function(object) {
             // upgrade if its ok to do so.
-            var new_amount = object.fire.fireRate - 100;
-            object.fire.fireRate = new_amount > object.fire.fireLimit ? new_amount : object.fire.fireLimit;
-            // console.log('Changing ' + upgrade.type + ' from: ' + object.fire[upgrade.type] + ' -> ' + new_amount);
+            var newAmount = object.fire.fireRate - 100;
+            object.fire.fireRate = newAmount > object.fire.fireLimit ? newAmount : object.fire.fireLimit;
+            // console.log('Changing ' + upgrade.type + ' from: ' + object.fire[upgrade.type] + ' -> ' + newAmount);
 
-            // var new_amount = object.fire[upgrade.type] + upgrade.amount;
-            // object.fire[upgrade.type] = new_amount > object.fire.fireLimit ? object.fire[upgrade.type] + upgrade.amount : app.fireLimit;
+            // var newAmount = object.fire[upgrade.type] + upgrade.amount;
+            // object.fire[upgrade.type] = newAmount > object.fire.fireLimit ? object.fire[upgrade.type] + upgrade.amount : app.fireLimit;
         }
-    },
-    {
+    }),
+    _.merge(Upgrades.defaults, {
         sprite: 'upgrade2',
-        object: 'base',
         price: 10,
-        size: 30,
         action: function(object) {
             object.fire.fireAmount++;
         }
-    }
+    }),
 ];
-
 
 // var simpleUpgradesPath = [
 
