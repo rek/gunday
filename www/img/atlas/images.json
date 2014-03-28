@@ -17,8 +17,24 @@
 	"sourceSize": {"w":3,"h":6}
 },
 {
+	"filename": "bullet-upgrade-off.png",
+	"frame": {"x":104,"y":37,"w":33,"h":33},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":33},
+	"sourceSize": {"w":33,"h":33}
+},
+{
+	"filename": "bullet-upgrade.png",
+	"frame": {"x":104,"y":2,"w":33,"h":33},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":33},
+	"sourceSize": {"w":33,"h":33}
+},
+{
 	"filename": "gun/base.png",
-	"frame": {"x":104,"y":70,"w":23,"h":23},
+	"frame": {"x":104,"y":72,"w":23,"h":23},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":23,"h":23},
@@ -26,19 +42,11 @@
 },
 {
 	"filename": "gun/turret.png",
-	"frame": {"x":129,"y":70,"w":13,"h":20},
+	"frame": {"x":129,"y":72,"w":13,"h":20},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":20},
 	"sourceSize": {"w":13,"h":20}
-},
-{
-	"filename": "upgradebuttons.png",
-	"frame": {"x":104,"y":2,"w":33,"h":66},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":66},
-	"sourceSize": {"w":33,"h":66}
 }],
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker ",
@@ -47,6 +55,6 @@
 	"format": "RGBA8888",
 	"size": {"w":144,"h":104},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:53c759f02bab26255dad682315c48c74:5cdfbbf2f8b085e41b564bb668474c7c:9be8c185d95a5be4a06ec0067a3d8380$"
+	"smartupdate": "$TexturePacker:SmartUpdate:6300be17125508a4d63e087820238885:12033fbd79c72daf94b6305c93cad17e:9be8c185d95a5be4a06ec0067a3d8380$"
 }
 }
