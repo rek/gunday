@@ -10,15 +10,15 @@
 },
 {
 	"filename": "bullet-1.png",
-	"frame": {"x":104,"y":17,"w":3,"h":6},
-	"rotated": true,
+	"frame": {"x":139,"y":2,"w":3,"h":6},
+	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":6},
 	"sourceSize": {"w":3,"h":6}
 },
 {
 	"filename": "gun/base.png",
-	"frame": {"x":70,"y":104,"w":23,"h":23},
+	"frame": {"x":104,"y":70,"w":23,"h":23},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":23,"h":23},
@@ -26,16 +26,16 @@
 },
 {
 	"filename": "gun/turret.png",
-	"frame": {"x":104,"y":2,"w":13,"h":20},
-	"rotated": true,
+	"frame": {"x":129,"y":70,"w":13,"h":20},
+	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":13,"h":20},
 	"sourceSize": {"w":13,"h":20}
 },
 {
 	"filename": "upgradebuttons.png",
-	"frame": {"x":2,"y":104,"w":33,"h":66},
-	"rotated": true,
+	"frame": {"x":104,"y":2,"w":33,"h":66},
+	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":66},
 	"sourceSize": {"w":33,"h":66}
@@ -45,8 +45,8 @@
 	"version": "1.0",
 	"image": "images.png",
 	"format": "RGBA8888",
-	"size": {"w":128,"h":256},
+	"size": {"w":144,"h":104},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:69cadd92745ba9152136dd8929d1bd45:5cdfbbf2f8b085e41b564bb668474c7c:9be8c185d95a5be4a06ec0067a3d8380$"
+	"smartupdate": "$TexturePacker:SmartUpdate:53c759f02bab26255dad682315c48c74:5cdfbbf2f8b085e41b564bb668474c7c:9be8c185d95a5be4a06ec0067a3d8380$"
 }
 }
