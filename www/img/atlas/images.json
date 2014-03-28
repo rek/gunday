@@ -10,15 +10,31 @@
 },
 {
 	"filename": "bullet-1.png",
-	"frame": {"x":139,"y":2,"w":3,"h":6},
+	"frame": {"x":129,"y":94,"w":3,"h":6},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":6},
 	"sourceSize": {"w":3,"h":6}
 },
 {
-	"filename": "bullet-speed-off.png",
+	"filename": "bullet-speed-06.png",
+	"frame": {"x":139,"y":37,"w":33,"h":33},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":33},
+	"sourceSize": {"w":33,"h":33}
+},
+{
+	"filename": "bullet-speed-off-03.png",
 	"frame": {"x":104,"y":37,"w":33,"h":33},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":33},
+	"sourceSize": {"w":33,"h":33}
+},
+{
+	"filename": "bullet-speed-off.png",
+	"frame": {"x":139,"y":2,"w":33,"h":33},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":33},
@@ -53,8 +69,8 @@
 	"version": "1.0",
 	"image": "images.png",
 	"format": "RGBA8888",
-	"size": {"w":144,"h":104},
+	"size": {"w":174,"h":104},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:2091fb7c7329c512aaf56f8c60a61afc:12033fbd79c72daf94b6305c93cad17e:9be8c185d95a5be4a06ec0067a3d8380$"
+	"smartupdate": "$TexturePacker:SmartUpdate:5720dd0be0b320a4af810dd3a5fc67d7:72ad6fa9817ebfe80e3a083bc38f2224:9be8c185d95a5be4a06ec0067a3d8380$"
 }
 }
