@@ -1,5 +1,5 @@
 var simpleUpgrades = [
-    _.merge(Upgrades.defaults, {
+    _.defaults({
         sprite: 'bullet-speed.png',
         price: 5,
         action: function(object) {
@@ -11,21 +11,21 @@ var simpleUpgrades = [
             // var newAmount = object.fire[upgrade.type] + upgrade.amount;
             // object.fire[upgrade.type] = newAmount > object.fire.fireLimit ? object.fire[upgrade.type] + upgrade.amount : app.fireLimit;
         }
-    }),
-    _.merge(Upgrades.defaults, {
+    }, Upgrades.defaults),
+    _.defaults({
         sprite: 'bullet-multiplier.png',
         price: 10,
         action: function(object) {
             object.fire.fireAmount++;
         }
-    }),
-    _.merge(Upgrades.defaults, {
+    }, Upgrades.defaults),
+    _.defaults({
         sprite: 'bullet-speed.png',
         price: 2,
         action: function(object) {
              // make a sentry
         }
-    }),
+    }, Upgrades.defaults)
 ];
 
 // var simpleUpgradesPath = [

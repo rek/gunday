@@ -71,7 +71,7 @@ var play_state = {
         // watch for hits
         this.game.physics.arcade.overlap(app.enemies, [this.bullets, app.base], this.enemy_hit, null, this);
 
-        if(app.alive) {
+        if (app.alive) {
             //  This will update the sprite.rotation so that it points to the currently active pointer
             //  On a Desktop that is the mouse, on mobile the most recent finger press.
             this.gun.rotation = game.physics.arcade.angleToPointer(this.gun) + 89.5;

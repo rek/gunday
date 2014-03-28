@@ -40,11 +40,10 @@ Upgrades.prototype.addUpgrades = function() {
 
     // show all the upgrades we are allows
     _(app.upgrades_available).forEach(function(upgrade_definition, k) {
-        // set to enabled (it might have been disabled after being purchased before)
-        upgrade_definition.disabled = false;
 
         // add the upgrade if it is not being displayed already
-        if(undefined === app.upgrade_sprites[upgrade_definition.sprite]) {
+        // if(undefined === app.upgrade_sprites[upgrade_definition.sprite]) {
+        if (upgrade_definition.disabled) {
             // console.log('Displaying upgrade: ' + upgrade_definition.sprite);
 
             // create an upgrade sprite
@@ -76,6 +75,10 @@ Upgrades.prototype.addUpgrades = function() {
 
             // save the refrence to the sprite
             app.upgrade_sprites[upgrade_definition.sprite] = upgrade_sprite;
+        } else {
+            upgrade_definition.disabled = false; // re-enable the sprite
+            // reset it to active
+            app[upgrade_definition.object].frameName = upgrade_definition.sprite;
         }
 
     }, this);
@@ -100,9 +103,9 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 
     var upgrade = this.getActiveUpgrade(sprite);
 
-    if(!upgrade) return; // if it has been disabled it won't be here, so just return.
+    if (!upgrade) return; // if it has been disabled it won't be here, so just return.
 
-    if(app.score - upgrade.price < 0) return false; // saftey
+    if (app.score - upgrade.price < 0) return false; // saftey
 
     // update the score
     app.score = app.score - upgrade.price;
@@ -132,7 +135,7 @@ Upgrades.prototype.removeUpgrades = function() {
     _(app.upgrade_sprites).each(function(upgrade_sprite) {
         var upgrade = this.getActiveUpgrade(upgrade_sprite);
         // and remove the ones we cannot afford
-        if(upgrade.price > app.score) {
+        if (upgrade.price > app.score) {
             this.removeUpgrade(upgrade_sprite, upgrade);
         }
     }, this);
