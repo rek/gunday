@@ -17,7 +17,7 @@
 	"sourceSize": {"w":3,"h":6}
 },
 {
-	"filename": "bullet-upgrade-off.png",
+	"filename": "bullet-speed-off.png",
 	"frame": {"x":104,"y":37,"w":33,"h":33},
 	"rotated": false,
 	"trimmed": false,
@@ -25,7 +25,7 @@
 	"sourceSize": {"w":33,"h":33}
 },
 {
-	"filename": "bullet-upgrade.png",
+	"filename": "bullet-speed.png",
 	"frame": {"x":104,"y":2,"w":33,"h":33},
 	"rotated": false,
 	"trimmed": false,
@@ -55,6 +55,6 @@
 	"format": "RGBA8888",
 	"size": {"w":144,"h":104},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:6300be17125508a4d63e087820238885:12033fbd79c72daf94b6305c93cad17e:9be8c185d95a5be4a06ec0067a3d8380$"
+	"smartupdate": "$TexturePacker:SmartUpdate:2091fb7c7329c512aaf56f8c60a61afc:12033fbd79c72daf94b6305c93cad17e:9be8c185d95a5be4a06ec0067a3d8380$"
 }
 }
