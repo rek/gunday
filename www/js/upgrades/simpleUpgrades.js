@@ -1,16 +1,3 @@
-Upgrades.defaults = {
-    sprite: 'default',// sprite name  (in loader.js)
-    object: 'base',   // object to apply this upgrade to
-    price: 5,         // cost of this upgrade
-    priceIncrement: 2,// how much to change the price each time. (price * this)
-    size: 30,         // height of the sprite
-    count: 0,         // currently applied upgrades
-    max: 2,           // amount of upgrades possible
-    action: function(object) {
-        console.log('Default upgrade action.');
-    }
-};
-
 var simpleUpgrades = [
     _.merge(Upgrades.defaults, {
         sprite: 'bullet-speed.png',
@@ -26,7 +13,7 @@ var simpleUpgrades = [
         }
     }),
     _.merge(Upgrades.defaults, {
-        sprite: 'bullet-miltiplyer.png',
+        sprite: 'bullet-multiplier.png',
         price: 10,
         action: function(object) {
             object.fire.fireAmount++;

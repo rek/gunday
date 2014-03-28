@@ -1,7 +1,20 @@
 var Upgrades = function () {
     // boom yeh!
-    this.label = { font: '14px Arial', fill: '#ccc' };
+    this.labelStyle = { font: '14px Arial', fill: '#ccc' };
 }
+
+Upgrades.defaults = {
+    sprite: 'default',// sprite name  (in loader.js)
+    object: 'base',   // object to apply this upgrade to
+    price: 5,         // cost of this upgrade
+    priceIncrement: 2,// how much to change the price each time. (price * this)
+    size: 30,         // height of the sprite
+    count: 0,         // currently applied upgrades
+    max: 2,           // amount of upgrades possible
+    action: function(object) {
+        console.log('Default upgrade action.');
+    }
+};
 
 Upgrades.prototype.all = [];
 
@@ -27,6 +40,9 @@ Upgrades.prototype.addUpgrades = function() {
 
     // show all the upgrades we are allows
     _(app.upgrades_available).forEach(function(upgrade_definition, k) {
+        // set to enabled (it might have been disabled after being purchased before)
+        upgrade_definition.disabled = false;
+
         // add the upgrade if it is not being displayed already
         if(undefined === app.upgrade_sprites[upgrade_definition.sprite]) {
             // console.log('Displaying upgrade: ' + upgrade_definition.sprite);
@@ -34,17 +50,19 @@ Upgrades.prototype.addUpgrades = function() {
             // create an upgrade sprite
             var upgrade_sprite = game.add.sprite(game.world.width-60, app.upgrade_position, 'atlas');
             upgrade_sprite.frameName = upgrade_definition.sprite;
-            upgrade_sprite.label = game.add.text(
-                game.world.width - 30,
-                app.upgrade_position + 4,
-                '  ' + upgrade_definition.count,
-                this.label
-            );
+            // allow us to click on it
             upgrade_sprite.inputEnabled = true;
             upgrade_sprite.input.useHandCursor = true; //if you want a hand cursor
             upgrade_sprite.events.onInputDown.add(function(clicked_sprite) {
                 this.purchaseUpgrades(clicked_sprite);
             }, this);
+
+            upgrade_sprite.label = game.add.text(
+                game.world.width - 30,
+                app.upgrade_position + 4,
+                '  ' + upgrade_definition.count,
+                this.labelStyle
+            );
 
             upgrade_sprite.events.onInputOver.add(function() {
                 app[upgrade_definition.object].fireDisable = true;
@@ -82,6 +100,8 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 
     var upgrade = this.getActiveUpgrade(sprite);
 
+    if(!upgrade) return; // if it has been disabled it won't be here, so just return.
+
     if(app.score - upgrade.price < 0) return false; // saftey
 
     // update the score
@@ -91,12 +111,14 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
     // upgrade the price
     upgrade.price = upgrade.price * upgrade.priceIncrement;
 
-    // do upgrade
+    // increment the amount active and display it
+    sprite.label.setText('  ' + ++upgrade.count);
+
+    // do the upgrade action
     upgrade.action(app[upgrade.object]);
 
-    // re-enable fire
+    // re-enable turret fire
     app[upgrade.object].fireDisable = false;
-    app[upgrade.object].count++;
 
     // check to see if after buying this we now cannot afford others
     this.removeUpgrades();
@@ -134,7 +156,8 @@ Upgrades.prototype.removeUpgrade = function(sprite, upgrade) {
     // remove upgrade button
     // sprite.kill();
 
-    sprite.frameName = 'disabled-' + upgrade_definition.sprite;
+    sprite.frameName = 'disabled-' + upgrade.sprite;
+    upgrade.disabled = true;
 
     // remove it from the list of upgrades
     // delete app.upgrade_sprites[sprite.frameName];
