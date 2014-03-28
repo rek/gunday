@@ -76,7 +76,7 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
     app.score_label.setText(app.score);
 
     // do upgrade
-    upgrade.action(app);
+    upgrade.action(app[upgrade.object]);
 
     // re-enable fire
     app[upgrade.object].fireDisable = false;
@@ -106,7 +106,7 @@ Upgrades.prototype.removeUpgrades = function() {
 * @param upgrade {object} Definition object of upgrade
 */
 Upgrades.prototype.removeUpgrade = function(sprite, upgrade) {
-    console.log('Removing upgrade: ' + sprite.key);
+    // console.log('Removing upgrade: ' + sprite.key);
 
     // reset the upgrade position
     app.upgrade_position = app.upgrade_position - upgrade.size;

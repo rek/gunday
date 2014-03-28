@@ -30,13 +30,13 @@ var play_state = {
         game.add.tileSprite(0, 0, 800, 600, 'background');
 
         // Display the gun on the screen
-        this.base = game.add.sprite(game.world.centerX-11, game.world.centerY, 'base');
+        app.base = game.add.sprite(game.world.centerX-11, game.world.centerY, 'base');
 
-        this.base.enableBody = true;
-        this.base.anchor.setTo(0.5, 0.5);
-        // this.base.physicsBodyType = Phaser.Physics.ARCADE;
+        app.base.enableBody = true;
+        app.base.anchor.setTo(0.5, 0.5);
+        // app.base.physicsBodyType = Phaser.Physics.ARCADE;
 
-        game.physics.enable(this.base, Phaser.Physics.ARCADE);
+        game.physics.enable(app.base, Phaser.Physics.ARCADE);
         this.gun = game.add.sprite(game.world.centerX+.5, game.world.centerY+11, 'gun');
 
         this.gun.enableBody = true;
@@ -48,13 +48,13 @@ var play_state = {
         // list of objects that can fire stuff
         // app.fireables = {};
 
-        this.base.fire = new Fireable();
+        app.base.fire = new Fireable();
 
 
         var self = this;
         this.game.input.onDown.add(function(e){
             // console.log('tapped');
-            self.fire(this.base);
+            self.fire(app.base);
         }, this);
 
         // Create a group of enemies
@@ -73,7 +73,7 @@ var play_state = {
     // This function is called 60 times per second
     update: function() {
         // watch for hits
-        this.game.physics.arcade.overlap(app.enemies, [this.bullets, this.base], this.enemy_hit, null, this);
+        this.game.physics.arcade.overlap(app.enemies, [this.bullets, app.base], this.enemy_hit, null, this);
 
         if(app.alive) {
             //  This will update the sprite.rotation so that it points to the currently active pointer
@@ -95,7 +95,7 @@ var play_state = {
         var fireable = source.fire;
         if (
                 app.alive                                 // if the object is alive
-                && !fireable.fireDisable                  // and not disabled
+                && !source.fireDisable                    // and not disabled
                 && game.time.now > fireable._fireCooldown // timeout between bullets
                 && this.bullets.countDead() > 0           // ?
             )
@@ -188,13 +188,13 @@ var play_state = {
             enemy.animations.add('walk');
             enemy.animations.play('walk', 15, true);
             // face the base (center)
-            enemy.rotation = game.physics.arcade.angleBetween(enemy, this.base) - 89.5;
+            enemy.rotation = game.physics.arcade.angleBetween(enemy, app.base) - 89.5;
             // e.body.velocity = Math.random() * 10;
             // enemy.body.angularVelocity = Math.floor(Math.random() * 100);
             enemy.body.mass = Math.random();
             // enemy.scale.x = app.scale;
             // enemy.scale.y = app.scale;
-            game.physics.arcade.moveToObject(enemy, this.base, app.enemy_speed);
+            game.physics.arcade.moveToObject(enemy, app.base, app.enemy_speed);
             app.enemies_count++;
         }
 
@@ -206,7 +206,7 @@ var play_state = {
         game.debug.text('Alive: ' + app.enemies_count, 100, 35);
         game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
         // game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
-        // game.debug.text('Firerate: ' + app.fireables.base.fireRate, 100, 65);
+        game.debug.text('Firerate: ' + app.base.fire.fireRate, 100, 65);
 
     }
 };
