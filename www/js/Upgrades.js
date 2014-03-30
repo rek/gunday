@@ -8,10 +8,10 @@ Upgrades.defaults = {
     object: 'base',   // object to apply this upgrade to
     price: 5,         // cost of this upgrade
     priceIncrement: 2,// how much to change the price each time. (price * this)
-    size: 30,         // height of the sprite
+    size: 37,         // height of the sprite
     count: 0,         // currently applied upgrades
     max: 2,           // amount of upgrades possible
-    disabled: false,  // disabled makes the upgrade look grey
+    enabled: true,    // disabled makes the upgrade look grey
     action: function(object) {
         console.log('Default upgrade action.');
     }
@@ -21,9 +21,13 @@ Upgrades.prototype.all = [];
 
 Upgrades.prototype.load = function(upgrade) {
     var self = this;
-    require(['upgrades/simpleUpgrades', 'upgrades/sentryUpgrades'], function() {
+    require([
+        'upgrades/simpleUpgrades',
+        'upgrades/sentryUpgrades',
+        'upgrades/otherUpgrades'
+    ], function() {
         // console.log('Loading ' + simpleUpgrades.length + ' upgrades.');
-        self.all = _.flatten([self.all, simpleUpgrades]);
+        self.all = _.flatten([self.all, simpleUpgrades, sentryUpgrades, otherUpgrades]);
     });
 
     // used for init, so we return ourselves
@@ -44,7 +48,7 @@ Upgrades.prototype.addUpgrades = function() {
         // add the upgrade if it is not being displayed already
         if (
             undefined === app.upgrade_sprites[upgrade_definition.sprite]
-            || !upgrade_definition.disabled
+            && upgrade_definition.enabled
         ) {
             // console.log('Displaying upgrade: ' + upgrade_definition.sprite);
 
@@ -60,7 +64,7 @@ Upgrades.prototype.addUpgrades = function() {
 
             upgrade_sprite.label = game.add.text(
                 game.world.width - 30,
-                app.upgrade_position + 4,
+                app.upgrade_position + 6,
                 '  ' + upgrade_definition.count,
                 this.labelStyle
             );
@@ -78,9 +82,11 @@ Upgrades.prototype.addUpgrades = function() {
             // save the refrence to the sprite
             app.upgrade_sprites[upgrade_definition.sprite] = upgrade_sprite;
         } else {
-            upgrade_definition.disabled = false; // re-enable the sprite
-            // reset it to active
-            app[upgrade_definition.sprite].frameName = upgrade_definition.sprite;
+            if (!upgrade_definition.enabled) {
+                upgrade_definition.enabled = true; // re-enable the sprite
+                // reset it to active
+                app.upgrade_sprites[upgrade_definition.sprite].frameName = upgrade_definition.sprite;
+            }
         }
 
     }, this);
@@ -119,7 +125,7 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
     // increment the amount active and display it
     sprite.label.setText('  ' + ++upgrade.count);
 
-    // do the upgrade action
+    // do the upgrade action - pass the sprite clicked
     upgrade.action(app[upgrade.object]);
 
     // re-enable turret fire
@@ -162,7 +168,7 @@ Upgrades.prototype.removeUpgrade = function(sprite, upgrade) {
     // sprite.kill();
 
     sprite.frameName = 'disabled-' + upgrade.sprite;
-    upgrade.disabled = true;
+    upgrade.enabled = false;
 
     // remove it from the list of upgrades
     // delete app.upgrade_sprites[sprite.frameName];

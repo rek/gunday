@@ -1,6 +1,11 @@
 var play_state = {
 
     preload: function() {
+        // only loaded once.
+    },
+
+    // Fuction called after 'preload' to setup the game
+    create: function() {
         app = {
             score: 0,
             alive: true,
@@ -22,10 +27,7 @@ var play_state = {
 
         // setup the upgrades
         app.upgrades = new Upgrades().load();
-    },
 
-    // Fuction called after 'preload' to setup the game
-    create: function() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.tileSprite(0, 0, 800, 600, 'atlas', 'bgtile.png' );
 
@@ -113,7 +115,7 @@ var play_state = {
                 bullet.rotation = game.physics.arcade.angleToPointer(bullet) + 1.5;
 
                 // move outwards
-                game.physics.arcade.moveToXY(bullet, game.input.worldX + bullet_angle, game.input.worldY, 300);
+                game.physics.arcade.moveToXY(bullet, game.input.worldX + bullet_angle, game.input.worldY + bullet_angle, fireable.speed);
                 // game.physics.arcade.moveToPointer(bullet, 300);
 
             }, this);
@@ -123,7 +125,7 @@ var play_state = {
     create_bullets: function() {
         this.bullets = game.add.group();
         this.bullets.enableBody = true;
-        // this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        // game.physics.enable(this.bullets, Phaser.Physics.ARCADE);
         this.bullets.createMultiple(10, 'atlas' , app.bullet);
         this.bullets.setAll('exists', false);
         this.bullets.setAll('visible', false);
@@ -148,20 +150,23 @@ var play_state = {
         } else { // a bullet has hit an enemy
             // check to make sure this enemy is alive
             // console.log(enemy.alive);
-            // if(enemy.alive) {}
-            object.kill();
+
             // enemy.alive = false;
             // increment the score
 
-            enemy.health--;
+// if(enemy.alive) {
+//     enemy.alive = false;
+//     enemy.exists = false;
+//     enemy.visible = false;
+            // enemy.health--;
             // app.score = app.score + (enemy.health >= 0 ? 1 : 0);
             app.scoreLabel.setText(++app.score);
 
             enemy.kill();
-
-
             // reduce the alive count of baddies
             app.enemies_count--;
+// }
+            object.kill();
             // check for new upgrades
             app.upgrades.addUpgrades();
             // increment dificulity
@@ -184,8 +189,9 @@ var play_state = {
     * @param {int} amount - Amount of the current enemy to create
     */
     spawn_random: function(amount) {
+        // pick a random number upto the max to set as new max
         var max_spawn = Math.floor(Math.random() * (amount || app.spawn_amount) + 1);
-        // console.log('making some bad guys: ' + max_spawn);
+        // console.log('Just making some bad guys: ' + max_spawn);
         var enemy;
         var sides = {
             direction0: function() {
@@ -203,7 +209,7 @@ var play_state = {
         }
 
         for (var i = 0; i < max_spawn; i++) {
-            // choose a random side
+            // choose a random side to spawn from
             sides['direction' + Math.floor(Math.random() * 4)]();
             // rotate in the middle
             enemy.anchor.setTo(0.5, 0.5);

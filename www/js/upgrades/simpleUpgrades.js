@@ -1,4 +1,5 @@
 var simpleUpgrades = [
+    // UPGRADE 1
     _.defaults({
         sprite: 'bullet-speed.png',
         price: 5,
@@ -12,20 +13,18 @@ var simpleUpgrades = [
             // object.fire[upgrade.type] = newAmount > object.fire.fireLimit ? object.fire[upgrade.type] + upgrade.amount : app.fireLimit;
         }
     }, Upgrades.defaults),
+
+    // UPGRADE 2
     _.defaults({
         sprite: 'bullet-multiplier.png',
-        price: 10,
+        price: 5,
         action: function(object) {
             object.fire.fireAmount++;
         }
     }, Upgrades.defaults),
-    _.defaults({
-        sprite: 'bullet-speed.png',
-        price: 2,
-        action: function(object) {
-             // make a sentry
-        }
-    }, Upgrades.defaults)
+
+
+
 ];
 
 // var simpleUpgradesPath = [
