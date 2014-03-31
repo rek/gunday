@@ -14,8 +14,8 @@ var sentryUpgrades = function() { return [
             }
 
             var sentry = this.sentrys.create(
-                game.world.centerX - this.positions[this.count][0],
-                game.world.centerY - this.positions[this.count][1],
+                game.world.centerX - this.positions[this.count-1][0],
+                game.world.centerY - this.positions[this.count-1][1],
                 'sentry1deploy'
             );
 

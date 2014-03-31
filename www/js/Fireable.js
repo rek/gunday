@@ -30,7 +30,7 @@ Fireable.prototype.fire = function(auto) {
         this.state.settings.alive                        // if the object is alive
         && !source.fireDisable                           // and not disabled
         && game.time.now > source.fireable._fireCooldown // timeout between bullets
-        && this.bullets.countDead() > 0            // ?
+        && this.bullets.countDead() > 0                  // ?
     )
     {
         // update the cool down for the next fire event

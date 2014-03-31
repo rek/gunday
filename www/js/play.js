@@ -17,7 +17,7 @@ var play_state = {
             spawn_amount: 1,
             // scale: 2,
             increment_time: 0.005,
-            increment_spawn: 0.1, // the rate enemy spawing is quickened
+            increment_spawn: 0.25, // the rate enemy spawing is quickened
             enemy_types: ['bug1walk'],
             enemy_current: 0,
             enemy_speed: 60,
