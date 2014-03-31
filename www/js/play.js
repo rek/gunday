@@ -245,11 +245,17 @@ var play_state = {
         text.anchor.set(0.5);
 
         // text.anchor.setTo(0.5);
-        game.time.events.add(Phaser.Timer.SECOND * 2, this.fadeObject, text);
-    },
+        // game.time.events.add(Phaser.Timer.SECOND * 2, this.fadeObject, text);
 
-    fadeObject: function(object) {
-        game.add.tween(object).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+// var bounce= this.game.add.tween(scoreText);
+
+//         bounce.to({ x: xx, y: yy-60 }, 1000 + Math.random() * 3000, Phaser.Easing.Linear.In);
+
+//         bounce.start();
+
+        // game.physics.arcade.moveToXY(text, game.input.worldX, 0, 50);
+        game.add.tween(text).to( { alpha: 0, y:0 }, 2000, Phaser.Easing.Linear.None, true);
+
     },
 
     render: function() {
