@@ -11,9 +11,7 @@ var libsToLoad = [
 ];
 
 var game = {},
-    app = {
-        version: '0.3.0'
-    };
+    app = {};
 
 if (mobile_found) {
     console.log('MOBILE');

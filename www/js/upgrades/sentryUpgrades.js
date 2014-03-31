@@ -17,16 +17,21 @@ var sentryUpgrades = [
             sentry.animations.add('deploy');
             sentry.animations.play('deploy', 10, false);
 
+            sentry.fireable = new Fireable(sentry);
+
             // watch for collision
             app.watchEnemyCollisions.push(sentry);
 
             sentry.events.onKilled.add(function() {
-              console.log('killed');
-            });
+                console.log('Sentry killed');
+                game.time.events.remove(this.timer);
+            }, this);
 
-            game.state.getCurrentState().addText(this.name);
+            this.timer = game.time.events.loop(Phaser.Timer.SECOND * 1, this.fire, this);
 
-            // app.sentrys[this.count].frameName = this.sprite;
+        },
+        fire: function() {
+            // this.source.
         }
     }, Upgrades.defaults),
 ];

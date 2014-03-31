@@ -17,8 +17,10 @@ Upgrades.defaults = {
     }
 };
 
+// All the upgrades
 Upgrades.prototype.all = [];
 
+// Load all the upgrades into the main array: Upgrades.all
 Upgrades.prototype.load = function(upgrade) {
     var self = this;
     require([
@@ -30,7 +32,7 @@ Upgrades.prototype.load = function(upgrade) {
         self.all = _.flatten([self.all, simpleUpgrades, sentryUpgrades, otherUpgrades]);
     });
 
-    // used for init, so we return ourselves
+    // used for init, so we need to eturn ourselves
     return this;
 };
 
@@ -62,6 +64,7 @@ Upgrades.prototype.addUpgrades = function() {
                 this.purchaseUpgrades(clicked_sprite);
             }, this);
 
+            // label on the side of the upgrade button. showing used count
             upgrade_sprite.label = game.add.text(
                 game.world.width - 30,
                 app.upgrade_position + 6,
@@ -69,6 +72,7 @@ Upgrades.prototype.addUpgrades = function() {
                 this.labelStyle
             );
 
+            // disable bullet fire when clicking on upgrades
             upgrade_sprite.events.onInputOver.add(function() {
                 app[upgrade_definition.object].fireDisable = true;
             });
@@ -91,7 +95,7 @@ Upgrades.prototype.addUpgrades = function() {
         }
 
     }, this);
-}
+};
 
 /*
 * Filter the avaiable upgrades and return the ones that are currently displayed
@@ -129,12 +133,15 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
     // do the upgrade action - pass the sprite clicked
     upgrade.action(app[upgrade.object]);
 
+    // show the text saying what this is
+    this.showUpgradeText(upgrade.name);
+
     // re-enable turret fire
     app[upgrade.object].fireDisable = false;
 
     // check to see if after buying this we now cannot afford others
     this.removeUpgrades();
-}
+};
 
 /*
 * Scan all upgrades and remove the ones we cannot afford anymore
@@ -148,7 +155,7 @@ Upgrades.prototype.removeUpgrades = function() {
             this.removeUpgrade(upgrade_sprite, upgrade);
         }
     }, this);
-}
+};
 
 /*
 * Remove one upgrade from displaying.
@@ -173,4 +180,11 @@ Upgrades.prototype.removeUpgrade = function(sprite, upgrade) {
 
     // remove it from the list of upgrades
     // delete app.upgrade_sprites[sprite.frameName];
-}
+};
+
+Upgrades.prototype.showUpgradeText = function(text) {
+    var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+    var text = game.add.text(game.world.centerX, 100, text);
+    text.anchor.set(0.5);
+    game.add.tween(text).to( { alpha: 0, y:0 }, 2000, Phaser.Easing.Linear.None, true);
+};

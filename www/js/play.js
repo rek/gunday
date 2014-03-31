@@ -7,7 +7,7 @@ var play_state = {
 
     // Fuction called after 'preload' to setup the game
     create: function() {
-        app = _.defaults({
+        app = { // smoke everything new each time
             score: 0,
             alive: true,
             delay: 2.5,
@@ -24,7 +24,7 @@ var play_state = {
             upgrade_position: 10, // where to show the next upgrade
             upgrade_sprites: {}, // once made, here is a list of the sprites
             upgrades_available: [], // all the upgrade definitions that are available
-        }, app);
+        };
 
         // setup the upgrades
         app.upgrades = new Upgrades().load();
@@ -49,12 +49,12 @@ var play_state = {
         app.watchEnemyCollisions = [this.bullets, app.base]
 
         // add the fire stuff to the base
-        app.base.fire = new Fireable();
+        app.base.fireable = new Fireable(app.base);
 
         var self = this;
-        this.game.input.onDown.add(function(e){
+        game.input.onDown.add(function(e){
             // console.log('tapped');
-            self.fire(app.base);
+            self.fire(app.base.fireable.fire(););
         }, this);
 
         // Create a group of enemies
@@ -63,7 +63,7 @@ var play_state = {
         // instantly create some
         this.spawn_random(app.spawn_amount);
         // set timer to create more
-        this.timer = this.game.time.events.loop(Phaser.Timer.SECOND * app.delay, this.spawn_random, this);
+        this.timer = game.time.events.loop(Phaser.Timer.SECOND * app.delay, this.spawn_random, this);
 
         // Add a score label on the top left of the screen
         app.style  = { font: '30px Arial', fill: '#ffffff' };
@@ -73,7 +73,7 @@ var play_state = {
     // This function is called 60 times per second
     update: function() {
         // watch for hits
-        this.game.physics.arcade.overlap(app.enemies, app.watchEnemyCollisions, this.enemy_hit, null, this);
+        game.physics.arcade.overlap(app.enemies, app.watchEnemyCollisions, this.enemy_hit, null, this);
 
         // this.onComplete = new Phaser.Signal();
         // this.onComplete.dispatch(this);
@@ -92,41 +92,6 @@ var play_state = {
                 // game.physics.arcade.accelerateToObject(enemy, self.base, 50, 250, 250);
                 // game.physics.arcade.moveToObject(enemy, self.base)
             // }, game.physics);
-        }
-    },
-
-    fire: function(source) {
-        // console.log('Firing from: ' + source.key );
-        // var fireable = app.fireables[source.key]; // get the object that is to be fired from
-        var fireable = source.fire;
-        if (
-                app.alive                                 // if the object is alive
-                && !source.fireDisable                    // and not disabled
-                && game.time.now > fireable._fireCooldown // timeout between bullets
-                && this.bullets.countDead() > 0           // ?
-            )
-        {
-            // update the cool down for the next fire event
-            fireable._fireCooldown = game.time.now + fireable.fireRate;
-
-            var i = 0;
-            var degrees = [ [0], [-10, 10], [-15, 0, 15] ];
-            _.times(fireable.fireAmount, function() {
-                // console.log('Creating a bullet at: ' + bullet_angle);
-                var bullet = this.bullets.getFirstDead();
-                bullet.anchor.setTo(0.5, 0.5);
-                // set the bullets to come from the center
-                bullet.reset(source.x, source.y);
-                // face outwards
-                bullet_angle = degrees[fireable.fireAmount-1][i++];
-                // make bullet face outwards
-                bullet.rotation = game.physics.arcade.angleToPointer(bullet) + 1.5;
-
-                // move outwards
-                game.physics.arcade.moveToXY(bullet, game.input.worldX + bullet_angle, game.input.worldY + bullet_angle, fireable.speed);
-                // game.physics.arcade.moveToPointer(bullet, 300);
-
-            }, this);
         }
     },
 
@@ -152,7 +117,7 @@ var play_state = {
         if (object.frameName === app.base.frameName) {
             // console.log('gun killed');
             app.alive = false;
-            this.game.time.events.remove(this.timer);
+            game.time.events.remove(this.timer);
             game.state.start('menu');
 
         } else { // a bullet has hit an enemy
@@ -187,9 +152,9 @@ var play_state = {
 
     restart_game: function() {
         // Remove the timer
-        this.game.time.events.remove(this.timer);
+        game.time.events.remove(this.timer);
         // Start the 'menu' state, which restarts the game
-        this.game.state.start('menu');
+        game.state.start('menu');
     },
 
     /*
@@ -238,33 +203,13 @@ var play_state = {
 
     },
 
-    addText: function(text) {
-        var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-        var text = game.add.text(game.world.centerX, 100, text);
-
-        text.anchor.set(0.5);
-
-        // text.anchor.setTo(0.5);
-        // game.time.events.add(Phaser.Timer.SECOND * 2, this.fadeObject, text);
-
-// var bounce= this.game.add.tween(scoreText);
-
-//         bounce.to({ x: xx, y: yy-60 }, 1000 + Math.random() * 3000, Phaser.Easing.Linear.In);
-
-//         bounce.start();
-
-        // game.physics.arcade.moveToXY(text, game.input.worldX, 0, 50);
-        game.add.tween(text).to( { alpha: 0, y:0 }, 2000, Phaser.Easing.Linear.None, true);
-
-    },
-
     render: function() {
         game.debug.text('Spawn: ' + app.spawn_amount, 100, 20);
         // game.debug.text('Delay: ' + app.delay, 200, 45);
         game.debug.text('Alive: ' + app.enemies_count, 100, 35);
         game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
         // game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
-        game.debug.text('Firerate: ' + app.base.fire.fireRate, 100, 65);
+        game.debug.text('Firerate: ' + app.base.fireable.fireRate, 100, 65);
 
     }
 };
