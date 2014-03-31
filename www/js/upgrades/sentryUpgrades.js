@@ -1,6 +1,3 @@
-app.sentrys = game.add.group();
-app.sentrys.enableBody = true;
-
 var sentryUpgrades = [
     _.defaults({
         sprite: 'sentry.png',
@@ -8,7 +5,13 @@ var sentryUpgrades = [
         price: 2,
         action: function() {
 
-            var sentry = app.sentrys.create(
+            if (undefined === this.sentrys) {
+                console.log('No current sentrys');
+                this.sentrys = game.add.group();
+                this.sentrys.enableBody = true;
+            }
+
+            var sentry = this.sentrys.create(
                 game.world.centerX - 30,
                 game.world.centerY - 30,
                 'sentry1deploy'
@@ -22,16 +25,27 @@ var sentryUpgrades = [
             // watch for collision
             app.watchEnemyCollisions.push(sentry);
 
-            sentry.events.onKilled.add(function() {
-                console.log('Sentry killed');
-                game.time.events.remove(this.timer);
+            var state = game.state.getCurrentState();
+            state.upgrades.onKilled.add(function() {
+                this.kill();
             }, this);
 
-            this.timer = game.time.events.loop(Phaser.Timer.SECOND * 1, this.fire, this);
+            sentry.events.onKilled.add(function() {
+                this.kill();
+            }, this);
+
+            this.timer = game.time.events.loop(Phaser.Timer.SECOND * 1, function() {
+                if (app.enemies_count > 0) {
+                    // console.log('Fire event called on: ' + this.name);
+                    sentry.fireable.fire(true); // true for auto aim
+                }
+            }, this);
 
         },
-        fire: function() {
-            // this.source.
+
+        kill: function() {
+            console.log('Sentry killed.');
+            game.time.events.remove(this.timer);
         }
     }, Upgrades.defaults),
 ];

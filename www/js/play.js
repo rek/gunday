@@ -1,3 +1,6 @@
+/*
+* States are reset at state change. So keep all game vars in 'this'
+*/
 var play_state = {
 
     preload: function() {
@@ -27,7 +30,7 @@ var play_state = {
         };
 
         // setup the upgrades
-        app.upgrades = new Upgrades().load();
+        this.upgrades = new Upgrades().load();
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.tileSprite(0, 0, 800, 600, 'atlas', 'bgtile.png');
@@ -51,15 +54,14 @@ var play_state = {
         // add the fire stuff to the base
         app.base.fireable = new Fireable(app.base);
 
-        var self = this;
         game.input.onDown.add(function(e){
             // console.log('tapped');
-            self.fire(app.base.fireable.fire(););
+            app.base.fireable.fire();
         }, this);
 
         // Create a group of enemies
-        app.enemies = game.add.group();
-        app.enemies.enableBody = true;
+        this.enemies = game.add.group();
+        this.enemies.enableBody = true;
         // instantly create some
         this.spawn_random(app.spawn_amount);
         // set timer to create more
@@ -73,7 +75,7 @@ var play_state = {
     // This function is called 60 times per second
     update: function() {
         // watch for hits
-        game.physics.arcade.overlap(app.enemies, app.watchEnemyCollisions, this.enemy_hit, null, this);
+        game.physics.arcade.overlap(this.enemies, app.watchEnemyCollisions, this.enemy_hit, null, this);
 
         // this.onComplete = new Phaser.Signal();
         // this.onComplete.dispatch(this);
@@ -115,11 +117,7 @@ var play_state = {
     enemy_hit: function(object, enemy) {
         // an enemy has hit the base
         if (object.frameName === app.base.frameName) {
-            // console.log('gun killed');
-            app.alive = false;
-            game.time.events.remove(this.timer);
-            game.state.start('menu');
-
+            this.restart_game();
         } else { // a bullet has hit an enemy
             // check to make sure this enemy is alive
             // console.log(enemy.alive);
@@ -142,7 +140,7 @@ var play_state = {
 
             object.kill();
             // check for new upgrades
-            app.upgrades.addUpgrades();
+            this.upgrades.addUpgrades();
             // increment dificulity
             app.spawn_amount = Math.floor(app.spawn_amount + app.increment_spawn);
 
@@ -150,7 +148,14 @@ var play_state = {
         }
     },
 
+    /*
+    * It's all over folks.
+    *
+    * Reset everything and goto the menu state.
+    */
     restart_game: function() {
+        app.alive = false;
+        this.upgrades.onKilled.dispatch(this);
         // Remove the timer
         game.time.events.remove(this.timer);
         // Start the 'menu' state, which restarts the game
@@ -167,18 +172,19 @@ var play_state = {
         var max_spawn = Math.floor(Math.random() * (amount || app.spawn_amount) + 1);
         // console.log('Just making some bad guys: ' + max_spawn);
         var enemy;
+        var self = this;
         var sides = {
             direction0: function() {
-                enemy = app.enemies.create(0, game.world.randomY, app.enemy_types[app.enemy_current]);
+                enemy = self.enemies.create(0, game.world.randomY, app.enemy_types[app.enemy_current]);
             },
             direction1: function() {
-                enemy = app.enemies.create(game.world.randomX, 0, app.enemy_types[app.enemy_current]);
+                enemy = self.enemies.create(game.world.randomX, 0, app.enemy_types[app.enemy_current]);
             },
             direction2: function() {
-                enemy = app.enemies.create(game.world.width, game.world.randomY, app.enemy_types[app.enemy_current]);
+                enemy = self.enemies.create(game.world.width, game.world.randomY, app.enemy_types[app.enemy_current]);
             },
             direction3: function() {
-                enemy = app.enemies.create(game.world.randomX, game.world.height, app.enemy_types[app.enemy_current]);
+                enemy = self.enemies.create(game.world.randomX, game.world.height, app.enemy_types[app.enemy_current]);
             },
         }
 

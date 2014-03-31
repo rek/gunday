@@ -1,6 +1,8 @@
 var Upgrades = function () {
     // boom yeh!
     this.labelStyle = { font: '14px Arial', fill: '#ccc' };
+
+    this.onKilled = new Phaser.Signal();
 }
 
 Upgrades.defaults = {
