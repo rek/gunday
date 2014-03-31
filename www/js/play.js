@@ -2,6 +2,7 @@ var play_state = {
 
     preload: function() {
         // only loaded once.
+        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     },
 
     // Fuction called after 'preload' to setup the game
@@ -45,6 +46,7 @@ var play_state = {
 
         // setup the bullets
         this.create_bullets();
+        app.watchEnemyCollisions = [this.bullets, app.base]
 
         // add the fire stuff to the base
         app.base.fire = new Fireable();
@@ -71,7 +73,13 @@ var play_state = {
     // This function is called 60 times per second
     update: function() {
         // watch for hits
-        this.game.physics.arcade.overlap(app.enemies, [this.bullets, app.base], this.enemy_hit, null, this);
+        this.game.physics.arcade.overlap(app.enemies, app.watchEnemyCollisions, this.enemy_hit, null, this);
+
+        // this.onComplete = new Phaser.Signal();
+        // this.onComplete.dispatch(this);
+        // if ( this._onUpdateCallback !== null ) {
+        //     this._onUpdateCallback.call(this);
+        // }
 
         if (app.alive) {
             //  This will update the sprite.rotation so that it points to the currently active pointer
@@ -166,6 +174,7 @@ var play_state = {
             // reduce the alive count of baddies
             app.enemies_count--;
 // }
+
             object.kill();
             // check for new upgrades
             app.upgrades.addUpgrades();
@@ -227,6 +236,20 @@ var play_state = {
             app.enemies_count++;
         }
 
+    },
+
+    addText: function(text) {
+        var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+        var text = game.add.text(game.world.centerX, 100, text);
+
+        text.anchor.set(0.5);
+
+        // text.anchor.setTo(0.5);
+        game.time.events.add(Phaser.Timer.SECOND * 2, this.fadeObject, text);
+    },
+
+    fadeObject: function(object) {
+        game.add.tween(object).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
     },
 
     render: function() {

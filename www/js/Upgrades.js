@@ -84,8 +84,9 @@ Upgrades.prototype.addUpgrades = function() {
         } else {
             if (!upgrade_definition.enabled) {
                 upgrade_definition.enabled = true; // re-enable the sprite
+
                 // reset it to active
-                app.upgrade_sprites[upgrade_definition.sprite].frameName = upgrade_definition.sprite;
+                // app.upgrade_sprites[upgrade_definition.sprite].frameName = upgrade_definition.sprite;
             }
         }
 

@@ -9,8 +9,13 @@ var menu_state = {
         var style = { font: "30px Arial", fill: "#ffffff" };
         var x = game.world.width/2, y = game.world.height/2;
 
-        // Adding a text centered on the screen
-        var text = this.game.add.text(x, y-50, "Tap to start", style);
+        var text = this.game.add.text(x, y-100, "GUNDAY", style);
+        text.anchor.setTo(0.5, 0.5);
+
+        text = this.game.add.text(x, y-50, "Tap to start", style);
+        text.anchor.setTo(0.5, 0.5);
+
+        text = this.game.add.text(x, y-20, "v" + app.version, style);
         text.anchor.setTo(0.5, 0.5);
 
         // If the user already played
