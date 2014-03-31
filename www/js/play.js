@@ -13,7 +13,7 @@ var play_state = {
         this.settings = { // smoke everything each time
             score: 0,
             alive: true,
-            delay: 2.5, // spawn delay
+            delay: 1.8, // spawn delay
             spawn_amount: 1,
             // scale: 2,
             increment_time: 0.005,
@@ -132,8 +132,7 @@ var play_state = {
             // check for new upgrades
             this.upgrades.addUpgrades();
             // increment dificulity
-            this.settings.spawn_amount = Math.floor(this.settings.spawn_amount + this.settings.increment_spawn);
-
+            this.settings.spawn_amount = this.settings.spawn_amount + this.settings.increment_spawn;
             // this.settings.delay = this.settings.delay - this.settings.increment_time;
         }
     },
@@ -210,7 +209,7 @@ var play_state = {
     },
 
     render: function() {
-        game.debug.text('Spawn: ' + this.settings.spawn_amount, 100, 20);
+        game.debug.text('Spawn: ' + Math.floor(this.settings.spawn_amount), 100, 20);
         // game.debug.text('Delay: ' + this.settings.delay, 200, 45);
         game.debug.text('Alive: ' + this.settings.enemies_count, 100, 35);
         game.debug.text('Upgrades: ' + this.settings.upgrades_available.length, 100, 50);

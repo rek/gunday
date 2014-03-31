@@ -4,6 +4,7 @@ var simpleUpgrades = function() { return [
         sprite: 'bullet-speed.png',
         name: '+1 Bullet Speed',
         price: 1,
+        priceIncrement: 1.5,
         action: function(object) {
             // upgrade if its ok to do so.
             var newAmount = object.fireable.fireRate - 100;

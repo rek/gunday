@@ -91,12 +91,12 @@ Fireable.prototype.fire = function(auto) {
                         bullet,
                         randomEnemy,
                         source.fireable.speed
-                    ) - 89.5;
+                    ) + 89.5;
 
                     game.physics.arcade.moveToObject(
                         bullet,
                         randomEnemy,
-                        source.fireable.speed + 300
+                        source.fireable.speed + 100
                     );
 
                 }

@@ -4,7 +4,7 @@ var sentryUpgrades = function() { return [
         name: '+1 Sentry',
         price: 1,
         max: 4,
-        positions: [[- 50, - 50], [+ 30, - 50], [+ 30, + 30], [- 50, + 30]],
+        positions: [[- 30, - 30], [+ 35, - 30], [+ 30, + 30], [- 30, + 30]],
         action: function() {
 
             if (undefined === this.sentrys) {
@@ -42,6 +42,8 @@ var sentryUpgrades = function() { return [
 
             // watch for collision
             this.state.settings.watchEnemyCollisions.push(sentry);
+            // watch for bullet hits
+            this.state.settings.watchEnemyCollisions.push(sentry.fireable.bullets);
 
             this.timer = game.time.events.loop(Phaser.Timer.SECOND * 1, function() {
                 if (this.state.settings.enemies_count > 0) {
