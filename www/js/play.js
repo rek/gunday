@@ -17,17 +17,19 @@ var play_state = {
             spawn_amount: 1,
             // scale: 2,
             increment_time: 0.005,
-            increment_spawn: 0.25, // the rate enemy spawing is quickened
+            increment_spawn: 0.25,   // the rate enemy spawing is quickened
             enemy_types: ['bug1walk'],
             enemy_current: 0,
             enemy_speed: 60,
-            enemies_alive: [],
             enemies_count: 0,
             upgrade_position: 10,    // where to show the next upgrade
-            upgrade_sprites: {},   // once made, here is a list of the sprites
+            upgrade_sprites: {},     // once made, here is a list of the sprites
             upgrades_available: [],  // all the upgrade definitions that are available
             watchEnemyCollisions: [] // watch these for collisions with enemies
         };
+
+        this.enemies_alive = [];     // the active enemies
+        this.enemy_last = null;
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         // setup the upgrades
@@ -119,6 +121,8 @@ var play_state = {
             // this.settings.score = this.settings.score + (enemy.health >= 0 ? 1 : 0);
             this.scoreLabel.setText(++this.settings.score);
 
+            delete this.enemies_alive[enemy.id];
+
             enemy.kill();
             // reduce the alive count of baddies
             this.settings.enemies_count--;
@@ -176,10 +180,13 @@ var play_state = {
         }
 
         for (var i = 0; i < max_spawn; i++) {
+            var side = Math.floor(Math.random() * 4);
             // choose a random side to spawn from
-            sides['direction' + Math.floor(Math.random() * 4)]();
+            sides['direction' + side]();
             // rotate in the middle
             enemy.anchor.setTo(0.5, 0.5);
+            // save the side its from (for auto targeting)
+            enemy.side = side + 1;
             // animate the movement
             enemy.animations.add('walk');
             enemy.animations.play('walk', 15, true);
@@ -192,6 +199,12 @@ var play_state = {
             // enemy.scale.y = this.settings.scale;
             game.physics.arcade.moveToObject(enemy, this.base, this.settings.enemy_speed);
             this.settings.enemies_count++;
+
+            enemy.id = this.settings.enemies_count - 1;
+            // this.enemies_alive.push(enemy);
+            // store it by key, so we can get it back easy when he is dead
+            this.enemies_alive[enemy.id] = enemy;
+            this.enemy_last = enemy;
         }
 
     },

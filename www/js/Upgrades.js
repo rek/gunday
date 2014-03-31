@@ -160,7 +160,7 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 */
 Upgrades.prototype.removeUpgrades = function() {
     // check all sprites showing
-    console.log(this.s.upgrade_sprites);
+    // console.log(this.s.upgrade_sprites);
     _(this.s.upgrade_sprites).each(function(upgrade_sprite) {
         // these might not even be active, so check to see if they exist first (next line)
         var upgrade = this.getActiveUpgrade(upgrade_sprite);

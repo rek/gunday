@@ -2,6 +2,7 @@ var Fireable = function (parent) {
     var awesome = 'yer';
     this.parent = parent;
     this.state = game.state.getCurrentState();
+    // console.log('Making some bullets');
 
     // setup the bullets
     this.bullets = game.add.group();
@@ -47,19 +48,58 @@ Fireable.prototype.fire = function(auto) {
             bullet.reset(source.x, source.y);
 
             if(auto) { // auto aim
-                var randomEnemy = this.state.enemies.getRandom();
+                // var randomEnemy = this.state.enemies_alive
+                // var pool = [];
+                // var total = 4; // total sentrys possible? or deployed?
+                // // var randomEnemy = this.state.enemies.getRandom();
+                // _(this.state.enemies_alive).each(function(e) {
+                //     var edge = false;
+                //     // if it is the first or last, we need to loop around
+                //     if (e.side == total || e.side == 0) {
+                //         edge = true;
+                //     }
 
-                game.physics.arcade.angleBetween(
-                    bullet,
-                    randomEnemy,
-                    source.fireable.speed
-                );
+                //     console.log(e.side);
+                //     console.log(source.definition.count);
+                //     // source.definition.count = the position of the sentry (currently its count)
+                //     if (
+                //         e.side >= source.definition.count - 1
+                //         || e.side <= source.definition.count + 1
+                //     ) {
+                //         pool.push[e];
+                //     }
+                // }, this);
 
-                game.physics.arcade.moveToObject(
-                    bullet,
-                    randomEnemy,
-                    source.fireable.speed
-                );
+                // console.log('pool members: ' + pool.length);
+
+                // randomEnemy = this.state.enemy_last;
+
+                // if (pool.length != 0) {
+
+                //     var selected = _.random(0, pool.length-1);
+
+                //     console.log('selected guy: ' + selected.id);
+                //     console.log(selected);
+
+                //     var randomEnemy = this.state.enemies_alive[selected.id];
+
+                var randomEnemy = this.state.enemy_last;
+
+                if (randomEnemy) {
+
+                    bullet.rotation = game.physics.arcade.angleBetween(
+                        bullet,
+                        randomEnemy,
+                        source.fireable.speed
+                    ) - 89.5;
+
+                    game.physics.arcade.moveToObject(
+                        bullet,
+                        randomEnemy,
+                        source.fireable.speed + 300
+                    );
+
+                }
             } else {
                 // make bullet face outwards
                 bullet.rotation = game.physics.arcade.angleToPointer(bullet) + 1.5;
