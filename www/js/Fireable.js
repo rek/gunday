@@ -2,6 +2,16 @@ var Fireable = function (parent) {
     var awesome = 'yer';
     this.parent = parent;
     this.state = game.state.getCurrentState();
+
+    // setup the bullets
+    this.bullets = game.add.group();
+    this.bullets.enableBody = true;
+    // game.physics.enable(this.bullets, Phaser.Physics.ARCADE);
+    this.bullets.createMultiple(10, 'atlas' , this.type);
+    this.bullets.setAll('exists', false);
+    this.bullets.setAll('visible', false);
+    this.bullets.setAll('checkWorldBounds', true);
+    this.bullets.setAll('outOfBoundsKill', true);
 }
 
 Fireable.prototype.fireRate = 1000;
@@ -10,6 +20,7 @@ Fireable.prototype.fireLimit = 100;
 Fireable.prototype.fireDisable = false; // if over an upgrade etc
 Fireable.prototype.fireAmount = 1;
 Fireable.prototype.speed = 150;
+Fireable.prototype.type = 'bullet-1.png';
 
 Fireable.prototype.fire = function(auto) {
     var source = this.parent;

@@ -10,15 +10,14 @@ var play_state = {
 
     // Fuction called after 'preload' to setup the game
     create: function() {
-        this.settings = { // smoke everything new each time
+        this.settings = { // smoke everything each time
             score: 0,
             alive: true,
-            delay: 2.5,
+            delay: 2.5, // spawn delay
             spawn_amount: 1,
-            scale: 2,
+            // scale: 2,
             increment_time: 0.005,
             increment_spawn: 0.05, // the rate enemy spawing is quickened
-            bullet: 'bullet-1.png',
             enemy_types: ['bug1walk'],
             enemy_current: 0,
             enemy_speed: 60,
@@ -32,6 +31,9 @@ var play_state = {
 
         // setup the upgrades
         this.upgrades = new Upgrades().load();
+
+        // Add a score label on the top left of the screen
+        this.settings.scoreLabel = game.add.text(20, 20, '0', { font: '30px Arial', fill: '#ffffff' });
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.add.tileSprite(0, 0, 800, 600, 'atlas', 'bgtile.png');
@@ -47,9 +49,6 @@ var play_state = {
         this.gun.frameName = 'turret.png';
         this.gun.enableBody = true;
         this.gun.anchor.setTo(0.5, 0.68); // set a good rotation point
-
-        // setup the bullets
-        this.create_bullets();
 
         this.settings.watchEnemyCollisions = [this.bullets, this.base];
 
@@ -68,9 +67,6 @@ var play_state = {
         this.spawn_random(this.settings.spawn_amount);
         // set timer to create more
         this.timer = game.time.events.loop(Phaser.Timer.SECOND * this.settings.delay, this.spawn_random, this);
-
-        // Add a score label on the top left of the screen
-        this.settings.scoreLabel = game.add.text(20, 20, '0', { font: '30px Arial', fill: '#ffffff' });
     },
 
     // This function is called 60 times per second
@@ -96,17 +92,6 @@ var play_state = {
                 // game.physics.arcade.moveToObject(enemy, self.base)
             // }, game.physics);
         }
-    },
-
-    create_bullets: function() {
-        this.bullets = game.add.group();
-        this.bullets.enableBody = true;
-        // game.physics.enable(this.bullets, Phaser.Physics.ARCADE);
-        this.bullets.createMultiple(10, 'atlas' , this.settings.bullet);
-        this.bullets.setAll('exists', false);
-        this.bullets.setAll('visible', false);
-        this.bullets.setAll('checkWorldBounds', true);
-        this.bullets.setAll('outOfBoundsKill', true);
     },
 
     /**
