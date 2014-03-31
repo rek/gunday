@@ -1,10 +1,11 @@
 var Fireable = function (parent) {
     var awesome = 'yer';
     this.parent = parent;
+    this.state = game.state.getCurrentState();
 }
 
 Fireable.prototype.fireRate = 1000;
-Fireable.prototype._fireCooldown = 0; // internal counter to work with fireRate
+Fireable.prototype._fireCooldown = 0;   // internal counter to work with fireRate
 Fireable.prototype.fireLimit = 100;
 Fireable.prototype.fireDisable = false; // if over an upgrade etc
 Fireable.prototype.fireAmount = 1;
@@ -12,14 +13,13 @@ Fireable.prototype.speed = 150;
 
 Fireable.prototype.fire = function(auto) {
     var source = this.parent;
-    var state = game.state.getCurrentState();
     // console.log('Firing from: ' + source.key );
 
     if (
-        app.alive                                        // if the object is alive
+        this.state.settings.alive                        // if the object is alive
         && !source.fireDisable                           // and not disabled
         && game.time.now > source.fireable._fireCooldown // timeout between bullets
-        && state.bullets.countDead() > 0                       // ?
+        && this.state.bullets.countDead() > 0            // ?
     )
     {
         // update the cool down for the next fire event
@@ -30,13 +30,13 @@ Fireable.prototype.fire = function(auto) {
         // call a set number of times
         _.times(source.fireable.fireAmount, function() {
             // console.log('Creating a bullet at: ' + bullet_angle);
-            var bullet = state.bullets.getFirstDead();
+            var bullet = this.state.bullets.getFirstDead();
             bullet.anchor.setTo(0.5, 0.5);
             // set the bullets to come from the center
             bullet.reset(source.x, source.y);
 
             if(auto) { // auto aim
-                var randomEnemy = state.enemies.getRandom();
+                var randomEnemy = this.state.enemies.getRandom();
 
                 game.physics.arcade.angleBetween(
                     bullet,

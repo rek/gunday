@@ -10,7 +10,7 @@ var play_state = {
 
     // Fuction called after 'preload' to setup the game
     create: function() {
-        app = { // smoke everything new each time
+        this.settings = { // smoke everything new each time
             score: 0,
             alive: true,
             delay: 2.5,
@@ -24,9 +24,10 @@ var play_state = {
             enemy_speed: 60,
             enemies_alive: [],
             enemies_count: 0,
-            upgrade_position: 10, // where to show the next upgrade
-            upgrade_sprites: {}, // once made, here is a list of the sprites
-            upgrades_available: [], // all the upgrade definitions that are available
+            upgrade_position: 10,    // where to show the next upgrade
+            upgrade_sprites: {},   // once made, here is a list of the sprites
+            upgrades_available: [],  // all the upgrade definitions that are available
+            watchEnemyCollisions: [] // watch these for collisions with enemies
         };
 
         // setup the upgrades
@@ -36,11 +37,11 @@ var play_state = {
         game.add.tileSprite(0, 0, 800, 600, 'atlas', 'bgtile.png');
 
         // Display the gun on the screen
-        app.base = game.add.sprite(game.world.centerX - 11, game.world.centerY, 'atlas');
-        app.base.frameName = 'base.png';
-        app.base.enableBody = true;
-        app.base.anchor.setTo(0.5, 0.5);
-        game.physics.enable(app.base, Phaser.Physics.ARCADE);
+        this.base = game.add.sprite(game.world.centerX - 11, game.world.centerY, 'atlas');
+        this.base.frameName = 'base.png';
+        this.base.enableBody = true;
+        this.base.anchor.setTo(0.5, 0.5);
+        game.physics.enable(this.base, Phaser.Physics.ARCADE);
 
         this.gun = game.add.sprite(game.world.centerX + 0.5, game.world.centerY + 11, 'atlas');
         this.gun.frameName = 'turret.png';
@@ -49,33 +50,33 @@ var play_state = {
 
         // setup the bullets
         this.create_bullets();
-        app.watchEnemyCollisions = [this.bullets, app.base]
+
+        this.settings.watchEnemyCollisions = [this.bullets, this.base];
 
         // add the fire stuff to the base
-        app.base.fireable = new Fireable(app.base);
+        this.base.fireable = new Fireable(this.base);
 
         game.input.onDown.add(function(e){
             // console.log('tapped');
-            app.base.fireable.fire();
+            this.base.fireable.fire();
         }, this);
 
         // Create a group of enemies
         this.enemies = game.add.group();
         this.enemies.enableBody = true;
-        // instantly create some
-        this.spawn_random(app.spawn_amount);
+        // instantly create some enemies
+        this.spawn_random(this.settings.spawn_amount);
         // set timer to create more
-        this.timer = game.time.events.loop(Phaser.Timer.SECOND * app.delay, this.spawn_random, this);
+        this.timer = game.time.events.loop(Phaser.Timer.SECOND * this.settings.delay, this.spawn_random, this);
 
         // Add a score label on the top left of the screen
-        app.style  = { font: '30px Arial', fill: '#ffffff' };
-        app.scoreLabel = game.add.text(20, 20, '0', app.style);
+        this.settings.scoreLabel = game.add.text(20, 20, '0', { font: '30px Arial', fill: '#ffffff' });
     },
 
     // This function is called 60 times per second
     update: function() {
         // watch for hits
-        game.physics.arcade.overlap(this.enemies, app.watchEnemyCollisions, this.enemy_hit, null, this);
+        game.physics.arcade.overlap(this.enemies, this.settings.watchEnemyCollisions, this.enemy_hit, null, this);
 
         // this.onComplete = new Phaser.Signal();
         // this.onComplete.dispatch(this);
@@ -83,7 +84,7 @@ var play_state = {
         //     this._onUpdateCallback.call(this);
         // }
 
-        if (app.alive) {
+        if (this.settings.alive) {
             //  This will update the sprite.rotation so that it points to the currently active pointer
             //  On a Desktop that is the mouse, on mobile the most recent finger press.
             this.gun.rotation = game.physics.arcade.angleToPointer(this.gun) + 89.5;
@@ -101,7 +102,7 @@ var play_state = {
         this.bullets = game.add.group();
         this.bullets.enableBody = true;
         // game.physics.enable(this.bullets, Phaser.Physics.ARCADE);
-        this.bullets.createMultiple(10, 'atlas' , app.bullet);
+        this.bullets.createMultiple(10, 'atlas' , this.settings.bullet);
         this.bullets.setAll('exists', false);
         this.bullets.setAll('visible', false);
         this.bullets.setAll('checkWorldBounds', true);
@@ -116,7 +117,7 @@ var play_state = {
     */
     enemy_hit: function(object, enemy) {
         // an enemy has hit the base
-        if (object.frameName === app.base.frameName) {
+        if (object.frameName === this.base.frameName) {
             this.restart_game();
         } else { // a bullet has hit an enemy
             // check to make sure this enemy is alive
@@ -131,18 +132,18 @@ var play_state = {
 //     enemy.visible = false;
             // enemy.health--;
             // app.score = app.score + (enemy.health >= 0 ? 1 : 0);
-            app.scoreLabel.setText(++app.score);
+            this.settings.scoreLabel.setText(++this.settings.score);
 
             enemy.kill();
             // reduce the alive count of baddies
-            app.enemies_count--;
+            this.settings.enemies_count--;
 // }
 
             object.kill();
             // check for new upgrades
             this.upgrades.addUpgrades();
             // increment dificulity
-            app.spawn_amount = Math.floor(app.spawn_amount + app.increment_spawn);
+            this.settings.spawn_amount = Math.floor(this.settings.spawn_amount + this.settings.increment_spawn);
 
             // app.delay = app.delay - app.increment_time;
         }
@@ -154,7 +155,7 @@ var play_state = {
     * Reset everything and goto the menu state.
     */
     restart_game: function() {
-        app.alive = false;
+        this.settings.alive = false;
         this.upgrades.onKilled.dispatch(this);
         // Remove the timer
         game.time.events.remove(this.timer);
@@ -169,22 +170,23 @@ var play_state = {
     */
     spawn_random: function(amount) {
         // pick a random number upto the max to set as new max
-        var max_spawn = Math.floor(Math.random() * (amount || app.spawn_amount) + 1);
+        var max_spawn = Math.floor(Math.random() * (amount || this.settings.spawn_amount) + 1);
         // console.log('Just making some bad guys: ' + max_spawn);
         var enemy;
         var self = this;
+        var anEnemyType = this.settings.enemy_types[this.settings.enemy_current];
         var sides = {
             direction0: function() {
-                enemy = self.enemies.create(0, game.world.randomY, app.enemy_types[app.enemy_current]);
+                enemy = self.enemies.create(0, game.world.randomY, anEnemyType);
             },
             direction1: function() {
-                enemy = self.enemies.create(game.world.randomX, 0, app.enemy_types[app.enemy_current]);
+                enemy = self.enemies.create(game.world.randomX, 0, anEnemyType);
             },
             direction2: function() {
-                enemy = self.enemies.create(game.world.width, game.world.randomY, app.enemy_types[app.enemy_current]);
+                enemy = self.enemies.create(game.world.width, game.world.randomY, anEnemyType);
             },
             direction3: function() {
-                enemy = self.enemies.create(game.world.randomX, game.world.height, app.enemy_types[app.enemy_current]);
+                enemy = self.enemies.create(game.world.randomX, game.world.height, anEnemyType);
             },
         }
 
@@ -197,25 +199,25 @@ var play_state = {
             enemy.animations.add('walk');
             enemy.animations.play('walk', 15, true);
             // face the base (center)
-            enemy.rotation = game.physics.arcade.angleBetween(enemy, app.base) - 89.5;
+            enemy.rotation = game.physics.arcade.angleBetween(enemy, this.base) - 89.5;
             // e.body.velocity = Math.random() * 10;
             // enemy.body.angularVelocity = Math.floor(Math.random() * 100);
             enemy.body.mass = Math.random();
             // enemy.scale.x = app.scale;
             // enemy.scale.y = app.scale;
-            game.physics.arcade.moveToObject(enemy, app.base, app.enemy_speed);
-            app.enemies_count++;
+            game.physics.arcade.moveToObject(enemy, this.base, this.settings.enemy_speed);
+            this.settings.enemies_count++;
         }
 
     },
 
     render: function() {
-        game.debug.text('Spawn: ' + app.spawn_amount, 100, 20);
+        game.debug.text('Spawn: ' + this.settings.spawn_amount, 100, 20);
         // game.debug.text('Delay: ' + app.delay, 200, 45);
-        game.debug.text('Alive: ' + app.enemies_count, 100, 35);
-        game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
+        game.debug.text('Alive: ' + this.settings.enemies_count, 100, 35);
+        game.debug.text('Upgrades: ' + this.settings.upgrades_available.length, 100, 50);
         // game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
-        game.debug.text('Firerate: ' + app.base.fireable.fireRate, 100, 65);
+        game.debug.text('Firerate: ' + this.base.fireable.fireRate, 100, 65);
 
     }
 };

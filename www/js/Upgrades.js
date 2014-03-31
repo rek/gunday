@@ -3,6 +3,8 @@ var Upgrades = function () {
     this.labelStyle = { font: '14px Arial', fill: '#ccc' };
 
     this.onKilled = new Phaser.Signal();
+    this.state = game.state.getCurrentState();
+    this.s = this.state.settings;
 }
 
 Upgrades.defaults = {
@@ -43,21 +45,21 @@ Upgrades.prototype.load = function(upgrade) {
 */
 Upgrades.prototype.addUpgrades = function() {
     // check what upgrades are in our pay grade
-    app.upgrades_available = _.filter(this.all, function(upgrade) {
-        return upgrade.price <= app.score && upgrade.count < upgrade.max;
-    });
+    this.s.upgrades_available = _.filter(this.all, function(upgrade) {
+        return upgrade.price <= this.s.score && upgrade.count < upgrade.max;
+    }, this);
 
     // show all the upgrades we are allows
-    _(app.upgrades_available).forEach(function(upgrade_definition, k) {
+    _(this.s.upgrades_available).forEach(function(upgrade_definition, k) {
         // add the upgrade if it is not being displayed already
         if (
-            undefined === app.upgrade_sprites[upgrade_definition.sprite]
+            undefined === this.s.upgrade_sprites[upgrade_definition.sprite]
             && upgrade_definition.enabled
         ) {
             // console.log('Displaying upgrade: ' + upgrade_definition.sprite);
 
             // create an upgrade sprite
-            var upgrade_sprite = game.add.sprite(game.world.width-60, app.upgrade_position, 'atlas');
+            var upgrade_sprite = game.add.sprite(game.world.width - 60, this.s.upgrade_position, 'atlas');
             upgrade_sprite.frameName = upgrade_definition.sprite;
             // allow us to click on it
             upgrade_sprite.inputEnabled = true;
@@ -69,24 +71,24 @@ Upgrades.prototype.addUpgrades = function() {
             // label on the side of the upgrade button. showing used count
             upgrade_sprite.label = game.add.text(
                 game.world.width - 30,
-                app.upgrade_position + 6,
+                this.s.upgrade_position + 6,
                 '  ' + upgrade_definition.count,
                 this.labelStyle
             );
 
             // disable bullet fire when clicking on upgrades
             upgrade_sprite.events.onInputOver.add(function() {
-                app[upgrade_definition.object].fireDisable = true;
-            });
+                this.state[upgrade_definition.object].fireDisable = true;
+            }, this);
             upgrade_sprite.events.onInputOut.add(function() {
-                app[upgrade_definition.object].fireDisable = false;
-            });
+                this.state[upgrade_definition.object].fireDisable = false;
+            }, this);
 
             // update the upgrade incremented location
-            app.upgrade_position = app.upgrade_position + upgrade_definition.size;
+            this.s.upgrade_position = this.s.upgrade_position + upgrade_definition.size;
 
             // save the refrence to the sprite
-            app.upgrade_sprites[upgrade_definition.sprite] = upgrade_sprite;
+            this.s.upgrade_sprites[upgrade_definition.sprite] = upgrade_sprite;
         } else {
             if (!upgrade_definition.enabled) {
                 upgrade_definition.enabled = true; // re-enable the sprite
@@ -105,7 +107,7 @@ Upgrades.prototype.addUpgrades = function() {
 * @param {sprite} sprite - Sprite on screen
 */
 Upgrades.prototype.getActiveUpgrade = function(sprite) {
-    return _.find(app.upgrades_available, { 'sprite': sprite.frameName });
+    return _.find(this.s.upgrades_available, { 'sprite': sprite.frameName });
 };
 
 /*
@@ -120,11 +122,11 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 
     if (!upgrade) return; // if it has been disabled it won't be here, so just return.
 
-    if (app.score - upgrade.price < 0) return false; // saftey
+    if (this.s.score - upgrade.price < 0) return false; // saftey
 
     // update the score
-    app.score = app.score - upgrade.price;
-    app.scoreLabel.setText(app.score);
+    this.s.score = this.s.score - upgrade.price;
+    this.s.scoreLabel.setText(this.s.score);
 
     // upgrade the price
     upgrade.price = upgrade.price * upgrade.priceIncrement;
@@ -133,13 +135,13 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
     sprite.label.setText('  ' + ++upgrade.count);
 
     // do the upgrade action - pass the sprite clicked
-    upgrade.action(app[upgrade.object]);
+    upgrade.action(this.state[upgrade.object]);
 
     // show the text saying what this is
     this.showUpgradeText(upgrade.name);
 
     // re-enable turret fire
-    app[upgrade.object].fireDisable = false;
+    this.state[upgrade.object].fireDisable = false;
 
     // check to see if after buying this we now cannot afford others
     this.removeUpgrades();
@@ -150,10 +152,10 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 */
 Upgrades.prototype.removeUpgrades = function() {
     // check all sprites showing
-    _(app.upgrade_sprites).each(function(upgrade_sprite) {
+    _(this.s.upgrade_sprites).each(function(upgrade_sprite) {
         var upgrade = this.getActiveUpgrade(upgrade_sprite);
         // and remove the ones we cannot afford
-        if (upgrade.price > app.score) {
+        if (upgrade.price > this.s.score) {
             this.removeUpgrade(upgrade_sprite, upgrade);
         }
     }, this);

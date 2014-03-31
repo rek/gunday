@@ -22,11 +22,8 @@ var sentryUpgrades = [
 
             sentry.fireable = new Fireable(sentry);
 
-            // watch for collision
-            app.watchEnemyCollisions.push(sentry);
-
-            var state = game.state.getCurrentState();
-            state.upgrades.onKilled.add(function() {
+            this.state = game.state.getCurrentState();
+            this.state.upgrades.onKilled.add(function() {
                 this.kill();
             }, this);
 
@@ -34,8 +31,11 @@ var sentryUpgrades = [
                 this.kill();
             }, this);
 
+            // watch for collision
+            this.state.settings.watchEnemyCollisions.push(sentry);
+
             this.timer = game.time.events.loop(Phaser.Timer.SECOND * 1, function() {
-                if (app.enemies_count > 0) {
+                if (this.state.settings.enemies_count > 0) {
                     // console.log('Fire event called on: ' + this.name);
                     sentry.fireable.fire(true); // true for auto aim
                 }

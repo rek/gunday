@@ -6,8 +6,8 @@ var simpleUpgrades = [
         price: 5,
         action: function(object) {
             // upgrade if its ok to do so.
-            var newAmount = object.fire.fireRate - 100;
-            object.fire.fireRate = newAmount > object.fire.fireLimit ? newAmount : object.fire.fireLimit;
+            var newAmount = object.fireable.fireRate - 100;
+            object.fireable.fireRate = newAmount > object.fireable.fireLimit ? newAmount : object.fireable.fireLimit;
             // console.log('Changing ' + upgrade.type + ' from: ' + object.fire[upgrade.type] + ' -> ' + newAmount);
 
             // var newAmount = object.fire[upgrade.type] + upgrade.amount;
@@ -21,7 +21,7 @@ var simpleUpgrades = [
         name: '+1 Bullet Multiplier',
         price: 5,
         action: function(object) {
-            object.fire.fireAmount++;
+            object.fireable.fireAmount++;
         }
     }, Upgrades.defaults),
 
