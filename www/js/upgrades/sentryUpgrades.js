@@ -3,7 +3,7 @@ app.sentrys.enableBody = true;
 
 var sentryUpgrades = [
     _.defaults({
-        sprite: 'bullet-speed.png',
+        sprite: 'sentry.png',
         name: '+1 Sentry',
         price: 2,
         action: function() {

@@ -5,17 +5,14 @@ var menu_state = {
         // space_key.onDown.add(this.start, this);
         game.input.onTap.add(this.start, this);
 
-        // Defining variables
-        var style = { font: "30px Arial", fill: "#ffffff" };
-        var x = game.world.width/2, y = game.world.height/2;
-
-        var text = this.game.add.text(x, y-100, "GUNDAY", style);
+        var text = this.game.add.text(game.world.centerX, 90, "GUNDAY", { font: "40px Arial", fill: "#000", 'strokeThickness': 2 });
+        text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
         text.anchor.setTo(0.5, 0.5);
 
-        text = this.game.add.text(x, y-50, "Tap to start", style);
+        text = this.game.add.text(game.world.centerX, game.world.centerY, "- Tap to start -", { font: "30px Arial", fill: "#ffffff" });
         text.anchor.setTo(0.5, 0.5);
 
-        text = this.game.add.text(x, y-20, "v" + app.version, style);
+        text = this.game.add.text(game.world.centerX, game.world.centerY-20, "v" + app.version, { font: "12px Arial", fill: "#ccc" });
         text.anchor.setTo(0.5, 0.5);
 
         // If the user already played

@@ -7,7 +7,7 @@ var play_state = {
 
     // Fuction called after 'preload' to setup the game
     create: function() {
-        app = {
+        app = _.defaults({
             score: 0,
             alive: true,
             delay: 2.5,
@@ -24,13 +24,13 @@ var play_state = {
             upgrade_position: 10, // where to show the next upgrade
             upgrade_sprites: {}, // once made, here is a list of the sprites
             upgrades_available: [], // all the upgrade definitions that are available
-        };
+        }, app);
 
         // setup the upgrades
         app.upgrades = new Upgrades().load();
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.add.tileSprite(0, 0, 800, 600, 'atlas', 'bgtile.png' );
+        game.add.tileSprite(0, 0, 800, 600, 'atlas', 'bgtile.png');
 
         // Display the gun on the screen
         app.base = game.add.sprite(game.world.centerX - 11, game.world.centerY, 'atlas');
