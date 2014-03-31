@@ -47,7 +47,7 @@ Upgrades.prototype.load = function(upgrade) {
 Upgrades.prototype.addUpgrades = function() {
     // check what upgrades are in our pay grade
     this.s.upgrades_available = _.filter(this.all, function(upgrade) {
-        return upgrade.price <= this.s.score && upgrade.count < upgrade.max;
+        return upgrade.price <= this.s.moneys && upgrade.count < upgrade.max;
     }, this);
 
     // show all the upgrades we are allows
@@ -130,11 +130,11 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 
     if (!upgrade) return; // if it has been disabled it won't be here, so just return.
 
-    if (this.s.score - upgrade.price < 0) return false; // saftey
+    if (this.s.moneys - upgrade.price < 0) return false; // saftey
 
-    // update the score
-    this.s.score = this.s.score - upgrade.price;
-    this.state.scoreLabel.setText(this.s.score);
+    // update the moneys
+    this.s.moneys = this.s.moneys - upgrade.price;
+    this.state.scoreLabel.setText(this.s.moneys);
 
     // upgrade the price
     upgrade.price = upgrade.price * upgrade.priceIncrement;
@@ -165,7 +165,7 @@ Upgrades.prototype.removeUpgrades = function() {
         // these might not even be active, so check to see if they exist first (next line)
         var upgrade = this.getActiveUpgrade(upgrade_sprite);
         // and remove the ones we cannot afford
-        if (upgrade && upgrade.price > this.s.score) {
+        if (upgrade && upgrade.price > this.s.moneys) {
             this.removeUpgrade(upgrade_sprite, upgrade);
         }
     }, this);

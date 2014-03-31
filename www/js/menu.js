@@ -20,8 +20,12 @@ var menu_state = {
         // If the user already played
         if (app.score > 0) {
             // Display its score
-            // var score_label = this.game.add.text(x, y+50, "Final score: " + app.score.toString(), style);
-            // score_label.anchor.setTo(0.5, 0.5);
+            var scoreLabel = this.game.add.text(game.world.centerX
+                , game.world.centerY+50
+                , "Final score: " + app.score.toString()
+                , { font: "12px Arial", fill: "#ccc" }
+            );
+            scoreLabel.anchor.setTo(0.5, 0.5);
         }
     },
 

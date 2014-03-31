@@ -10,8 +10,9 @@ var play_state = {
 
     // Fuction called after 'preload' to setup the game
     create: function() {
+        app.score = 0;
         this.settings = { // smoke everything each time
-            score: 0,
+            moneys: 0,
             alive: true,
             delay: 1.8, // spawn delay
             spawn_amount: 1,
@@ -38,7 +39,8 @@ var play_state = {
         // load the background
         game.add.tileSprite(0, 0, 800, 600, 'atlas', 'bgtile.png');
         // Add a score label on the top left of the screen
-        this.scoreLabel = game.add.text(20, 20, '0', { font: '30px Arial', fill: '#ffffff' });
+        this.moneysLabel = game.add.text(10, 5, 'GD: 0', { font: '20px Arial', fill: '#ffffff' });
+        this.scoreLabel = game.add.text(10, 25, 'Score: 0', { font: '20px Arial', fill: '#ffffff' });
 
         // Display the gun on the screen
         this.base = game.add.sprite(game.world.centerX - 11, game.world.centerY, 'atlas');
@@ -119,7 +121,8 @@ var play_state = {
 //     enemy.visible = false;
             // enemy.health--;
             // this.settings.score = this.settings.score + (enemy.health >= 0 ? 1 : 0);
-            this.scoreLabel.setText(++this.settings.score);
+            this.moneysLabel.setText('GD: ' + ++this.settings.moneys);
+            this.scoreLabel.setText('Score: ' + ++app.score);
 
             delete this.enemies_alive[enemy.id];
 
@@ -209,12 +212,12 @@ var play_state = {
     },
 
     render: function() {
-        game.debug.text('Spawn: ' + Math.floor(this.settings.spawn_amount), 100, 20);
+        game.debug.text('Spawn: ' + Math.floor(this.settings.spawn_amount), 120, 20);
         // game.debug.text('Delay: ' + this.settings.delay, 200, 45);
-        game.debug.text('Alive: ' + this.settings.enemies_count, 100, 35);
-        game.debug.text('Upgrades: ' + this.settings.upgrades_available.length, 100, 50);
-        // game.debug.text('Upgrades: ' + this.settings.upgrades_available.length, 100, 50);
-        game.debug.text('Firerate: ' + this.base.fireable.fireRate, 100, 65);
+        game.debug.text('Alive: ' + this.settings.enemies_count, 120, 35);
+        game.debug.text('Upgrades: ' + this.settings.upgrades_available.length, 120, 50);
+        // game.debug.text('Upgrades: ' + this.settings.upgrades_available.length, 120, 50);
+        game.debug.text('Firerate: ' + this.base.fireable.fireRate, 120, 65);
 
     }
 };
