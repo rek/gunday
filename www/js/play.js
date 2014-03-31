@@ -33,13 +33,13 @@ var play_state = {
 
         // Display the gun on the screen
         app.base = game.add.sprite(game.world.centerX - 11, game.world.centerY, 'atlas');
-        app.base.frameName = 'gun/base.png';
+        app.base.frameName = 'base.png';
         app.base.enableBody = true;
         app.base.anchor.setTo(0.5, 0.5);
         game.physics.enable(app.base, Phaser.Physics.ARCADE);
 
         this.gun = game.add.sprite(game.world.centerX + 0.5, game.world.centerY + 11, 'atlas');
-        this.gun.frameName = 'gun/turret.png';
+        this.gun.frameName = 'turret.png';
         this.gun.enableBody = true;
         this.gun.anchor.setTo(0.5, 0.68); // set a good rotation point
 
