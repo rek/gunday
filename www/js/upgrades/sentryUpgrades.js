@@ -1,8 +1,10 @@
-var sentryUpgrades = [
+var sentryUpgrades = function() { return [
     _.defaults({
         sprite: 'sentry.png',
         name: '+1 Sentry',
-        price: 2,
+        price: 1,
+        max: 4,
+        positions: [[- 50, - 50], [+ 30, - 50], [+ 30, + 30], [- 50, + 30]],
         action: function() {
 
             if (undefined === this.sentrys) {
@@ -12,13 +14,14 @@ var sentryUpgrades = [
             }
 
             var sentry = this.sentrys.create(
-                game.world.centerX - 30,
-                game.world.centerY - 30,
+                game.world.centerX - this.positions[this.count][0],
+                game.world.centerY - this.positions[this.count][1],
                 'sentry1deploy'
             );
 
             sentry.animations.add('deploy');
             sentry.animations.play('deploy', 10, false);
+            sentry.anchor.setTo(0.5, 0.5);
 
             sentry.fireable = new Fireable(sentry);
 
@@ -44,8 +47,9 @@ var sentryUpgrades = [
         },
 
         kill: function() {
+            this.count--;
             console.log('Sentry killed.');
             game.time.events.remove(this.timer);
         }
     }, Upgrades.defaults),
-];
+]; };

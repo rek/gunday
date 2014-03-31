@@ -1,6 +1,7 @@
 var Upgrades = function () {
     // boom yeh!
     this.labelStyle = { font: '14px Arial', fill: '#ccc' };
+    this.drawAtThisPlaceX = game.world.width - 30;
 
     this.onKilled = new Phaser.Signal();
     this.state = game.state.getCurrentState();
@@ -33,7 +34,7 @@ Upgrades.prototype.load = function(upgrade) {
         'upgrades/otherUpgrades'
     ], function() {
         // console.log('Loading ' + simpleUpgrades.length + ' upgrades.');
-        self.all = _.flatten([self.all, simpleUpgrades, sentryUpgrades, otherUpgrades]);
+        self.all = _.flatten([self.all, simpleUpgrades(), sentryUpgrades(), otherUpgrades()]);
     });
 
     // used for init, so we need to eturn ourselves
@@ -70,15 +71,20 @@ Upgrades.prototype.addUpgrades = function() {
 
             // label on the side of the upgrade button. showing used count
             upgrade_sprite.label = game.add.text(
-                game.world.width - 30,
+                this.drawAtThisPlaceX,
                 this.s.upgrade_position + 6,
                 '  ' + upgrade_definition.count,
                 this.labelStyle
             );
 
+            // save the current position we drew our sprite
+            upgrade_definition.upgrade_position = this.s.upgrade_position;
+
             // disable bullet fire when clicking on upgrades
             upgrade_sprite.events.onInputOver.add(function() {
                 this.state[upgrade_definition.object].fireDisable = true;
+                // set the mouse over text
+                this.showHoverText(upgrade_definition);
             }, this);
             upgrade_sprite.events.onInputOut.add(function() {
                 this.state[upgrade_definition.object].fireDisable = false;
@@ -89,12 +95,13 @@ Upgrades.prototype.addUpgrades = function() {
 
             // save the refrence to the sprite
             this.s.upgrade_sprites[upgrade_definition.sprite] = upgrade_sprite;
-        } else {
+        } else { // if it is already drawn, just enable it:
+
             if (!upgrade_definition.enabled) {
                 upgrade_definition.enabled = true; // re-enable the sprite
 
-                // reset it to active
-                // app.upgrade_sprites[upgrade_definition.sprite].frameName = upgrade_definition.sprite;
+                // set it to use the enabled frame again
+                this.s.upgrade_sprites[upgrade_definition.sprite].frameName = upgrade_definition.sprite;
             }
         }
 
@@ -107,6 +114,7 @@ Upgrades.prototype.addUpgrades = function() {
 * @param {sprite} sprite - Sprite on screen
 */
 Upgrades.prototype.getActiveUpgrade = function(sprite) {
+    // console.log(this.s.upgrades_available);
     return _.find(this.s.upgrades_available, { 'sprite': sprite.frameName });
 };
 
@@ -126,7 +134,7 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 
     // update the score
     this.s.score = this.s.score - upgrade.price;
-    this.s.scoreLabel.setText(this.s.score);
+    this.state.scoreLabel.setText(this.s.score);
 
     // upgrade the price
     upgrade.price = upgrade.price * upgrade.priceIncrement;
@@ -152,10 +160,12 @@ Upgrades.prototype.purchaseUpgrades = function(sprite) {
 */
 Upgrades.prototype.removeUpgrades = function() {
     // check all sprites showing
+    console.log(this.s.upgrade_sprites);
     _(this.s.upgrade_sprites).each(function(upgrade_sprite) {
+        // these might not even be active, so check to see if they exist first (next line)
         var upgrade = this.getActiveUpgrade(upgrade_sprite);
         // and remove the ones we cannot afford
-        if (upgrade.price > this.s.score) {
+        if (upgrade && upgrade.price > this.s.score) {
             this.removeUpgrade(upgrade_sprite, upgrade);
         }
     }, this);
@@ -186,8 +196,29 @@ Upgrades.prototype.removeUpgrade = function(sprite, upgrade) {
     // delete app.upgrade_sprites[sprite.frameName];
 };
 
+/**
+* Show the price of the upgrade on mouseOver
+*
+*/
+Upgrades.prototype.showHoverText = function(upgrade) {
+    var text = game.add.text(
+        this.drawAtThisPlaceX - 55,
+        upgrade.upgrade_position + 15,
+        'GD:' + upgrade.price,
+        { font: "16px Arial", fill: "#fff", align: "center" }
+    );
+    text.anchor.set(0.5);
+    game.time.events.add(Phaser.Timer.SECOND * 1, function() {
+        text.destroy();
+    }, this);
+    // game.add.tween(text).to( { alpha: 0, y:0 }, 2000, Phaser.Easing.Linear.None, true);
+};
+
+/**
+* Show the upgrade name in the middle when purchased
+*
+*/
 Upgrades.prototype.showUpgradeText = function(text) {
-    var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
     var text = game.add.text(game.world.centerX, 100, text);
     text.anchor.set(0.5);
     game.add.tween(text).to( { alpha: 0, y:0 }, 2000, Phaser.Easing.Linear.None, true);

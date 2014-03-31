@@ -17,7 +17,7 @@ var play_state = {
             spawn_amount: 1,
             // scale: 2,
             increment_time: 0.005,
-            increment_spawn: 0.05, // the rate enemy spawing is quickened
+            increment_spawn: 0.1, // the rate enemy spawing is quickened
             enemy_types: ['bug1walk'],
             enemy_current: 0,
             enemy_speed: 60,
@@ -29,14 +29,14 @@ var play_state = {
             watchEnemyCollisions: [] // watch these for collisions with enemies
         };
 
+        game.physics.startSystem(Phaser.Physics.ARCADE);
         // setup the upgrades
         this.upgrades = new Upgrades().load();
 
-        // Add a score label on the top left of the screen
-        this.settings.scoreLabel = game.add.text(20, 20, '0', { font: '30px Arial', fill: '#ffffff' });
-
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+        // load the background
         game.add.tileSprite(0, 0, 800, 600, 'atlas', 'bgtile.png');
+        // Add a score label on the top left of the screen
+        this.scoreLabel = game.add.text(20, 20, '0', { font: '30px Arial', fill: '#ffffff' });
 
         // Display the gun on the screen
         this.base = game.add.sprite(game.world.centerX - 11, game.world.centerY, 'atlas');
@@ -50,10 +50,10 @@ var play_state = {
         this.gun.enableBody = true;
         this.gun.anchor.setTo(0.5, 0.68); // set a good rotation point
 
-        this.settings.watchEnemyCollisions = [this.bullets, this.base];
-
         // add the fire stuff to the base
         this.base.fireable = new Fireable(this.base);
+
+        this.settings.watchEnemyCollisions = [this.base.fireable.bullets, this.base];
 
         game.input.onDown.add(function(e){
             // console.log('tapped');
@@ -87,7 +87,7 @@ var play_state = {
 
             // var self = this;
             // update position of all enemies
-            // app.enemies.forEach(function(enemy) {
+            // this.enemies.forEach(function(enemy) {
                 // game.physics.arcade.accelerateToObject(enemy, self.base, 50, 250, 250);
                 // game.physics.arcade.moveToObject(enemy, self.base)
             // }, game.physics);
@@ -116,8 +116,8 @@ var play_state = {
 //     enemy.exists = false;
 //     enemy.visible = false;
             // enemy.health--;
-            // app.score = app.score + (enemy.health >= 0 ? 1 : 0);
-            this.settings.scoreLabel.setText(++this.settings.score);
+            // this.settings.score = this.settings.score + (enemy.health >= 0 ? 1 : 0);
+            this.scoreLabel.setText(++this.settings.score);
 
             enemy.kill();
             // reduce the alive count of baddies
@@ -130,7 +130,7 @@ var play_state = {
             // increment dificulity
             this.settings.spawn_amount = Math.floor(this.settings.spawn_amount + this.settings.increment_spawn);
 
-            // app.delay = app.delay - app.increment_time;
+            // this.settings.delay = this.settings.delay - this.settings.increment_time;
         }
     },
 
@@ -188,8 +188,8 @@ var play_state = {
             // e.body.velocity = Math.random() * 10;
             // enemy.body.angularVelocity = Math.floor(Math.random() * 100);
             enemy.body.mass = Math.random();
-            // enemy.scale.x = app.scale;
-            // enemy.scale.y = app.scale;
+            // enemy.scale.x = this.settings.scale;
+            // enemy.scale.y = this.settings.scale;
             game.physics.arcade.moveToObject(enemy, this.base, this.settings.enemy_speed);
             this.settings.enemies_count++;
         }
@@ -198,10 +198,10 @@ var play_state = {
 
     render: function() {
         game.debug.text('Spawn: ' + this.settings.spawn_amount, 100, 20);
-        // game.debug.text('Delay: ' + app.delay, 200, 45);
+        // game.debug.text('Delay: ' + this.settings.delay, 200, 45);
         game.debug.text('Alive: ' + this.settings.enemies_count, 100, 35);
         game.debug.text('Upgrades: ' + this.settings.upgrades_available.length, 100, 50);
-        // game.debug.text('Upgrades: ' + app.upgrades_available.length, 100, 50);
+        // game.debug.text('Upgrades: ' + this.settings.upgrades_available.length, 100, 50);
         game.debug.text('Firerate: ' + this.base.fireable.fireRate, 100, 65);
 
     }

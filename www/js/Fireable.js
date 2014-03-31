@@ -30,7 +30,7 @@ Fireable.prototype.fire = function(auto) {
         this.state.settings.alive                        // if the object is alive
         && !source.fireDisable                           // and not disabled
         && game.time.now > source.fireable._fireCooldown // timeout between bullets
-        && this.state.bullets.countDead() > 0            // ?
+        && this.bullets.countDead() > 0            // ?
     )
     {
         // update the cool down for the next fire event
@@ -41,7 +41,7 @@ Fireable.prototype.fire = function(auto) {
         // call a set number of times
         _.times(source.fireable.fireAmount, function() {
             // console.log('Creating a bullet at: ' + bullet_angle);
-            var bullet = this.state.bullets.getFirstDead();
+            var bullet = this.bullets.getFirstDead();
             bullet.anchor.setTo(0.5, 0.5);
             // set the bullets to come from the center
             bullet.reset(source.x, source.y);

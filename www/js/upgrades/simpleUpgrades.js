@@ -1,9 +1,9 @@
-var simpleUpgrades = [
+var simpleUpgrades = function() { return [
     // UPGRADE 1
     _.defaults({
         sprite: 'bullet-speed.png',
         name: '+1 Bullet Speed',
-        price: 5,
+        price: 1,
         action: function(object) {
             // upgrade if its ok to do so.
             var newAmount = object.fireable.fireRate - 100;
@@ -25,9 +25,7 @@ var simpleUpgrades = [
         }
     }, Upgrades.defaults),
 
-
-
-];
+];};
 
 // var simpleUpgradesPath = [
 

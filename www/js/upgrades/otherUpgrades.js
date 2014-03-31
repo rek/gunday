@@ -1,5 +1,4 @@
-var otherUpgrades = [
-
+var otherUpgrades = function() { return [
     // invincible bullets
     _.defaults({
         name: '+1 Invincible Bullets',
@@ -17,4 +16,4 @@ var otherUpgrades = [
         name: '+1 Bomb',
         price: 20,
     }, Upgrades.defaults),
-];
+]; };
