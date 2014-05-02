@@ -1,3 +1,5 @@
+/*global app, game, Phaser*/
+'use strict';
 /*
 * States are reset at state change. So keep all game vars in 'this'
 */
@@ -5,7 +7,7 @@ var play_state = {
 
     preload: function() {
         // only loaded once.
-        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+        // game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
     },
 
     // Fuction called after 'preload' to setup the game

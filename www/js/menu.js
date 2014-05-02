@@ -1,6 +1,9 @@
+/*global game, app */
+'use strict';
+
 var menu_state = {
     create: function() {
-        app.version = '0.4.0';
+        app.version = '0.4.4';
 
         // Call the 'start' function when pressing the spacebar
         // var space_key = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);

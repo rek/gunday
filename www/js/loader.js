@@ -26,7 +26,7 @@ require(libsToLoad, function($) {
     app.dims = {
         maxWidth: 400,
         maxHeight: 490
-    }
+    };
 
     getWindowSizes = function() {
       var windowHeight = 0, windowWidth = 0;
@@ -43,7 +43,7 @@ require(libsToLoad, function($) {
          windowWidth = document.body.clientWidth;
       }
       return [windowWidth, windowHeight];
-    }
+    };
 
     if (mobile_found) {
         // $(window).bind('resize', function () {

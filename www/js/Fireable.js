@@ -1,5 +1,6 @@
 var Fireable = function (parent) {
-    var awesome = 'yer';
+    this.version = '0.1.0';
+    this.awesome = 'yer';
     this.parent = parent;
     this.state = game.state.getCurrentState();
     // console.log('Making some bullets');
